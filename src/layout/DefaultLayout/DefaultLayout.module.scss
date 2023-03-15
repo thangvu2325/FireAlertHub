@@ -1,0 +1,21 @@
+.wrapper {
+}
+.wrapper-content {
+    position: relative;
+    width: calc(100% - 280px);
+    left: 280px;
+    transition: 0.3s ease;
+}
+
+.container {
+    background-color: #ebebeb;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.content {
+    transform: translateY(-10%);
+}

@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700,900');
+@import url(https://fonts.googleapis.com/css?family=Pacifico);
+.wrap {
+    margin-top: calc(var(--default-layout-header-height) * 2);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.container {
+    padding: 40px 60px;
+    border: 3px dotted var(--primary);
+    border-radius: 4px;
+    width: 600px;
+}
+.title {
+    font-family: 'Pacifico';
+    font-weight: 600;
+    font-size: 40px;
+    text-align: center;
+    line-height: 1.4;
+    color: #2980b9;
+}
+.menu-item {
+    text-align: center;
+    margin-top: 50px;
+}
+.item {
+    display: block;
+    margin: 8px 8px;
+    padding: 8px 20px;
+    text-align: center;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    &:hover {
+        opacity: 0.6;
+    }
+}

@@ -1,0 +1,15 @@
+.wrap {
+    background-color: var(--white);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--width-sidebar);
+    height: 100%;
+    z-index: 2000;
+    transition: 0.3s ease;
+    overflow-x: hidden;
+}
+.container {
+    text-align: center;
+}
+// homepage
