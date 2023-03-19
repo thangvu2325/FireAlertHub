@@ -3,19 +3,16 @@ import styles from './Signup.module.scss';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, firestore } from '~/firebase_setup/firebase.js';
 import { addDoc, collection } from 'firebase/firestore';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import Button from '~/components/Button';
 import { database } from '~/firebase_setup/firebase';
 import { ref, set } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '~/AuthContext';
-import Redirect from '~/Redirect';
 
 // eslint-disable-next-line
 const cx = classNames.bind(styles);
 function Signup() {
     const navigate = useNavigate();
-    const { currentUser } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
@@ -34,7 +31,7 @@ function Signup() {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            console.log(user.uid);
+
             writeUserData(locate, user.uid, confirm);
             await addDoc(collection(firestore, 'users'), {
                 uid: user.uid,

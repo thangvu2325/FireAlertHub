@@ -1,0 +1,26 @@
+.wrap {
+    background-color: var(--white);
+    margin: auto auto;
+    width: 800px;
+    border-radius: 4px;
+}
+.action {
+    text-align: center;
+    margin: 20px 8px;
+    position: relative;
+}
+
+.input-locate {
+    padding: 8px 16px;
+    border: 1px solid var(--text-color);
+    margin: 16px 8px;
+    border-radius: 4px;
+}
+.btn {
+    margin: 16px 8px;
+    color: var(--text-color);
+}
+.container {
+    position: absolute;
+    left: 50%;
+}

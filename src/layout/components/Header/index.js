@@ -24,6 +24,7 @@ import Image from '~/components/Image';
 import config from '~/config';
 import { auth } from '~/firebase_setup/firebase';
 import SwitchMode from '~/components/SwitchMode';
+import { StateContext } from '~/App';
 const cx = classNames.bind(styles);
 const handleSignOut = async () => {
     try {
@@ -70,8 +71,9 @@ const MENU_ITEM = [
         title: 'Keyboard shortcuts',
     },
 ];
-
+export var barClickChecked = false;
 function Header() {
+    const styleState = useContext(StateContext);
     const { currentUser } = useContext(AuthContext);
     const userMenu = [
         {
@@ -87,10 +89,15 @@ function Header() {
             separate: false,
         },
     ];
+
+    const handleClickBars = () => {
+        styleState.setSidebarWidth(!styleState.sidebarWidth);
+    };
+
     return (
         <header className={cx('wrapper')}>
             <Link to={config.routes.home} className={cx('logo-link')}>
-                <FontAwesomeIcon icon={currentUser ? faBars : faHome} />
+                <FontAwesomeIcon icon={currentUser ? faBars : faHome} onClick={handleClickBars} />
             </Link>
             <div className={cx('actions')}>
                 <SwitchMode />

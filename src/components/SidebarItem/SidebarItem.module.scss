@@ -5,7 +5,6 @@
 }
 
 .container {
-    width: 100%;
     display: block;
     height: 48px;
     border-radius: 48px;
@@ -14,6 +13,9 @@
     z-index: 1;
     margin: 8px 0;
     padding: 4px;
+    &:hover .content {
+        color: #3c91e6;
+    }
 }
 .active {
     border-color: #ebebeb;
@@ -26,14 +28,9 @@
     color: var(--text-color);
     line-height: 38px;
     margin: 0 8px;
-    font-size: 2rem;
+    font-size: 20px;
+    white-space: nowrap;
     svg {
-        fill: #495057;
-        width: 20px;
-        height: 20px;
-        margin-right: 8px;
+        margin-right: 24px;
     }
-}
-.footer {
-    margin-top: 150px;
 }

@@ -10,17 +10,6 @@ const cx = classNames.bind(styles);
 function Dashboard() {
     const [mq2Value, setMq2Value] = useState('');
     const [fireValue, setFireValue] = useState('');
-    // setInterval(() => {
-    //     onValue(ref(database, `From_HCMUT/`), (snapshot) => {
-    //         if (snapshot.exists()) {
-    //             Setmq2Value(snapshot.val()['MQ2_value']);
-    //             SetfireValue(snapshot.val()['Fire_value']);
-    //         } else {
-    //             console.log('No data available');
-    //         }
-    //     });
-    // }, 1000);
-    // //
 
     const { currentUser } = useContext(AuthContext);
     useEffect(() => {

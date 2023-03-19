@@ -1,9 +1,9 @@
-import styles from './Setting.module.scss';
+import styles from './Security.module.scss';
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(styles);
 
-function Setting() {
+function Security() {
     return (
         <div className={cx('wrap')}>
             <div className={cx('container')}></div>
@@ -11,4 +11,4 @@ function Setting() {
     );
 }
 
-export default Setting;
+export default Security;

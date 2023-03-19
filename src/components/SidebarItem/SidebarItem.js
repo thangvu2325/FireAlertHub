@@ -6,7 +6,7 @@ import React from 'react';
 import { useRef, useState } from 'react';
 const cx = classNames.bind(styles);
 
-function SidebarItem(items, children) {
+function SidebarItem(items) {
     const refs = useRef({});
 
     const getRef = (name) => {
@@ -43,55 +43,24 @@ function SidebarItem(items, children) {
 
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('body')}>
-                {items.items.map((item, index) => {
-                    return (
-                        <>
-                            {!!item.locate ? null : (
-                                <Link
-                                    key={index}
-                                    to={config.routes[item.to]}
-                                    className={cx('container', {
-                                        active: activeElement === refs.current[item.ref].current,
-                                    })}
-                                    onClick={handleClick}
-                                    ref={refs.current[item.ref]}
-                                >
-                                    <div className={cx('content')}>
-                                        {item.icon}
-                                        {item.title}
-                                    </div>
-                                </Link>
-                            )}
-                        </>
-                    );
-                })}
-            </div>
-
-            <div className={cx('footer')}>
-                {items.items.map((item, index) => {
-                    return (
-                        <>
-                            {!item.locate ? null : (
-                                <Link
-                                    key={index}
-                                    to={config.routes[item.to]}
-                                    className={cx('container', {
-                                        active: activeElement === refs.current[item.ref].current,
-                                    })}
-                                    onClick={handleClick}
-                                    ref={refs.current[item.ref]}
-                                >
-                                    <div className={cx('content')}>
-                                        {item.icon}
-                                        {item.title}
-                                    </div>
-                                </Link>
-                            )}
-                        </>
-                    );
-                })}
-            </div>
+            {items.items.map((item, index) => {
+                return (
+                    <Link
+                        key={index}
+                        to={config.routes[item.to]}
+                        className={cx('container', {
+                            active: activeElement === refs.current[item.ref].current,
+                        })}
+                        onClick={handleClick}
+                        ref={refs.current[item.ref]}
+                    >
+                        <div className={cx('content')}>
+                            {item.icon}
+                            {item.title}
+                        </div>
+                    </Link>
+                );
+            })}
         </div>
     );
 }

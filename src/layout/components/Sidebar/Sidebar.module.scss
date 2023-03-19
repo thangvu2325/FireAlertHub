@@ -1,15 +1,19 @@
 .wrap {
     background-color: var(--white);
-    position: fixed;
-    top: 0;
-    left: 0;
     width: var(--width-sidebar);
     height: 100%;
     z-index: 2000;
     transition: 0.3s ease;
-    overflow-x: hidden;
+    border-bottom-right-radius: 4px;
+    overflow: hidden;
+}
+.checked {
+    width: 70px;
 }
 .container {
     text-align: center;
+}
+.svg-inline {
+    overflow: visible;
 }
 // homepage

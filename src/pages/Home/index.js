@@ -1,6 +1,7 @@
 import styles from './Home.module.scss';
 import classNames from 'classnames/bind';
 import config from '~/config';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 function Home() {
@@ -9,18 +10,18 @@ function Home() {
             <div className={cx('container')}>
                 <h1 className={cx('title')}>Phòng cháy, Chữa cháy!</h1>
                 <div className={cx('menu-item')}>
-                    <a href={config.routes.home} className={cx('item')}>
+                    <Link to={config.routes.home} className={cx('item')}>
                         Home
-                    </a>
-                    <a href={config.routes.aboutUs} className={cx('item')}>
+                    </Link>
+                    <Link to={config.routes.aboutUs} className={cx('item')}>
                         About Us
-                    </a>
-                    <a href={config.routes.services} className={cx('item')}>
+                    </Link>
+                    <Link to={config.routes.services} className={cx('item')}>
                         Services
-                    </a>
-                    <a href={config.routes.contact} className={cx('item')}>
+                    </Link>
+                    <Link to={config.routes.contact} className={cx('item')}>
                         Contact
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

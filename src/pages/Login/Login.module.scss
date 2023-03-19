@@ -11,14 +11,13 @@
     font-size: 4rem;
     text-align: center;
     line-height: 1.4;
-    color: #2980b9;
+    color: var(--text-color);
     text-align: left;
     margin: 12px 24px;
 }
 .container {
     width: 500px;
-    margin-top: 150px;
-    background-color: #fff;
+    background-color: var(--white);
     border-radius: 4px;
     text-align: center;
 }
@@ -40,7 +39,7 @@
     font-size: 1.4rem;
     padding: 8px 16px;
     margin: 8px 16px;
-    border: 1px solid #2980b9;
+    border: 1px solid var(--text-color);
 }
 .btn {
     width: 100%;
