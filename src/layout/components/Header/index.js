@@ -96,9 +96,9 @@ function Header() {
 
     return (
         <header className={cx('wrapper')}>
-            <Link to={config.routes.home} className={cx('logo-link')}>
+            <div className={cx('logo-link')}>
                 <FontAwesomeIcon icon={currentUser ? faBars : faHome} onClick={handleClickBars} />
-            </Link>
+            </div>
             <div className={cx('actions')}>
                 <SwitchMode />
                 {currentUser ? (

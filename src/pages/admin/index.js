@@ -1,5 +1,5 @@
-function Logout() {
-    return <h2>Logout</h2>;
+function admin() {
+    return <h2>admin</h2>;
 }
 
-export default Logout;
+export default admin;

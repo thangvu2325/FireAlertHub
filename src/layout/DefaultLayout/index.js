@@ -3,6 +3,8 @@ import Sidebar from '../components/Sidebar';
 import styles from './DefaultLayout.module.scss';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
+import ModalBox from '~/components/ModalBox';
+import { useCallback } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -13,6 +15,7 @@ function DefaultLayout({ children }) {
     };
     return (
         <div className={cx('wrapper')}>
+            <ModalBox />
             <Sidebar checked={checked} />
             <div className={cx('wrapper-content')}>
                 <Header parentCallback={callbackFunction} />

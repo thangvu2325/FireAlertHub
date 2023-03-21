@@ -1,19 +1,12 @@
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-function RoundChart({ value, maxValue, className }) {
-    const percent = (100 * value) / maxValue;
-    var colorText = '#3e98c7';
-    if (percent >= 70) {
-        colorText = '#f7406b';
-    } else if (percent > 50 && percent < 70) {
-        colorText = '#e99613';
-    }
+function RoundChart({ className, ...props }) {
     return (
         <CircularProgressbar
-            value={value}
-            text={`${(100 * value) / maxValue}%`}
-            maxValue={maxValue}
+            value={props.value.value}
+            text={`${(100 * props.value.value) / props.value.maxValue}%`}
+            maxValue={props.value.maxValue}
             className={className}
             styles={{
                 // Customize the root svg elkement
@@ -21,7 +14,13 @@ function RoundChart({ value, maxValue, className }) {
                 // Customize the path, i.e. the "completed progress"
                 path: {
                     // Path color
-                    stroke: `${colorText}`,
+                    stroke: `${
+                        (100 * props.value.value) / props.value.maxValue > 70
+                            ? '#f7406b'
+                            : (100 * props.value.value) / props.value.maxValue > 50
+                            ? '#e99613'
+                            : '#3e98c7'
+                    }`,
                     // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
                     strokeLinecap: 'butt',
                     // Customize transition animation
@@ -43,7 +42,13 @@ function RoundChart({ value, maxValue, className }) {
                 // Customize the text
                 text: {
                     // Text color
-                    fill: `${colorText}`,
+                    fill: `${
+                        (100 * props.value.value) / props.value.maxValue > 70
+                            ? '#f7406b'
+                            : (100 * props.value.value) / props.value.maxValue > 50
+                            ? '#e99613'
+                            : '#3e98c7'
+                    }`,
                     // Text size
                     fontSize: '16px',
                 },

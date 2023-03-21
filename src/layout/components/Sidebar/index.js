@@ -6,11 +6,12 @@ import SidebarItem from '~/components/SidebarItem';
 import { BookIcon, DashboardIcon, HomeIcon, ServiceIcon } from '~/components/Icons';
 import { StateContext } from '~/App';
 import { useContext } from 'react';
-
 const cx = classNames.bind(styles);
 function Sidebar() {
+    const { admin } = useContext(StateContext);
     const styleState = useContext(StateContext);
     const checked = styleState.sidebarWidth;
+    console.log(admin);
     const MENU_ITEM = [
         {
             icon: <HomeIcon className={cx('svg-inline')} />,
@@ -37,17 +38,47 @@ function Sidebar() {
             ref: 'servicesLink',
         },
         {
-            locate: 'footer',
             icon: <ServiceIcon className={cx('svg-inline')} />,
             title: 'Setting',
             to: 'setting',
             ref: 'settingLink',
         },
         {
-            locate: 'footer',
             icon: <ServiceIcon className={cx('svg-inline')} />,
             title: 'Bảo Mật',
             to: 'security',
+            ref: 'securityLink',
+        },
+    ];
+    const MENU_Admin = [
+        {
+            icon: <HomeIcon className={cx('svg-inline')} />,
+            title: 'Trang chủ',
+            to: 'home',
+            ref: 'homeLink',
+        },
+        {
+            icon: <DashboardIcon className={cx('svg-inline')} />,
+            title: 'Dashboard',
+            to: 'dashboard',
+            ref: 'dashboardLink',
+        },
+        {
+            icon: <ServiceIcon className={cx('svg-inline')} />,
+            title: 'Analyst',
+            to: 'services',
+            ref: 'servicesLink',
+        },
+        {
+            icon: <ServiceIcon className={cx('svg-inline')} />,
+            title: 'Setting',
+            to: 'setting',
+            ref: 'settingLink',
+        },
+        {
+            icon: <ServiceIcon className={cx('svg-inline')} />,
+            title: 'User',
+            to: 'services',
             ref: 'securityLink',
         },
     ];
@@ -59,7 +90,7 @@ function Sidebar() {
         >
             <div className={cx('container')}>
                 <SidebarHeader />
-                <SidebarItem items={MENU_ITEM} />
+                <SidebarItem items={admin ? MENU_Admin : MENU_ITEM} />
             </div>
         </aside>
     );

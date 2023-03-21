@@ -34,19 +34,23 @@
     margin-right: auto;
 }
 .input {
-    width: 100%;
     display: block;
     line-height: 1.4;
     font-size: 1.4rem;
     padding: 8px 16px;
     margin: 8px 16px;
     border: 1px solid var(--text-color);
+    border-radius: 4px;
 }
 .btn {
-    width: 100%;
     margin: 8px 16px;
 }
 .detail {
     display: block;
     margin: 24px 16px;
+}
+
+.map {
+    position: absolute;
+    left: 80%;
 }

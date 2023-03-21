@@ -8,7 +8,8 @@ import Button from '~/components/Button';
 import { database } from '~/firebase_setup/firebase';
 import { ref, set } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
-
+import Leaflet from '~/components/Leaflet';
+console.log(auth);
 // eslint-disable-next-line
 const cx = classNames.bind(styles);
 function Signup() {
@@ -16,9 +17,11 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
+    const [phoneNumber, setPhone] = useState('');
     const [locate, setLocate] = useState('');
     const [inform, setInform] = useState('');
     const [error, seterror] = useState('');
+    const [openMap, setOpenMap] = useState(false);
     // Firebase
     function writeUserData(locate, uid, confirm) {
         set(ref(database, `User_using/${confirm}`), {
@@ -26,10 +29,13 @@ function Signup() {
             uid,
         });
     }
-    // handle
-    const handleSignUp = async (email, password, locate, confirm) => {
+    const callbackFunction = (childData) => {
+        setLocate(childData);
+    };
+    const handleSignUp = async (email, phoneNumber, password, locate, confirm) => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
             const user = userCredential.user;
 
             writeUserData(locate, user.uid, confirm);
@@ -50,18 +56,15 @@ function Signup() {
             setEmail('');
             setPassword('');
             setPassword2('');
+            setPhone('');
             navigate('/');
-            const res = await handleSignUp(email, password, locate, inform);
+            const res = await handleSignUp(email, password, phoneNumber, locate, inform);
             if (res.error) seterror(res.error);
         }
     };
-    // const autoNavigate = () => {
-    //     if (currentUser) {
-    //         navigate('/');
-    //     }
-    // };
-    // autoNavigate();
-
+    const handleMap = () => {
+        setOpenMap(!openMap);
+    };
     return (
         <>
             <div className={cx('wrap')}>
@@ -100,11 +103,21 @@ function Signup() {
                             <input
                                 className={cx('input')}
                                 type="text"
+                                name="phone"
+                                value={phoneNumber}
+                                placeholder="Nhập Phone:"
+                                required
+                                onChange={(e) => setPhone(e.target.value)}
+                            />
+                            <input
+                                className={cx('input')}
+                                type="text"
                                 name="locate"
                                 value={locate}
-                                placeholder="Nhập locate"
+                                placeholder="Nhập vị trí:"
                                 required
                                 onChange={(e) => setLocate(e.target.value)}
+                                disabled
                             />
                             <input
                                 className={cx('input')}
@@ -119,12 +132,18 @@ function Signup() {
                             <Button className={cx('btn')} primary type="submit">
                                 Submit
                             </Button>
+                            <Button className={cx('btn')} primary onClick={handleMap}>
+                                Map
+                            </Button>
                         </form>
                         <div className={cx('detail')}>
                             already registered?{' '}
                             <Button small outline to="/login">
                                 Login
                             </Button>
+                        </div>
+                        <div className={cx('map')}>
+                            {openMap ? <Leaflet parentCallback={callbackFunction} /> : null}
                         </div>
                     </div>
                 </div>

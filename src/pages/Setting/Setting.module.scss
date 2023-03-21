@@ -1,26 +1,40 @@
 .wrap {
     background-color: var(--white);
-    margin: auto auto;
-    width: 800px;
+    margin: 100px auto;
+    width: 600px;
+    height: 500px;
     border-radius: 4px;
-}
-.action {
-    text-align: center;
-    margin: 20px 8px;
     position: relative;
 }
 
+.container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.action {
+    text-align: center;
+    margin: 20px 0;
+}
+.content {
+    display: flex;
+}
+.title {
+    width: 30%;
+}
 .input-locate {
+    flex: 1;
     padding: 8px 16px;
     border: 1px solid var(--text-color);
-    margin: 16px 8px;
+    margin: 0 8px;
     border-radius: 4px;
 }
 .btn {
     margin: 16px 8px;
     color: var(--text-color);
 }
-.container {
+.container_map {
     position: absolute;
-    left: 50%;
+    left: 300px;
 }

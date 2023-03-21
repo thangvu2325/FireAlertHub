@@ -9,7 +9,7 @@ const routes = {
     user: '/user',
     instruct: '/instruct',
     dashboard: '/dashboard',
-    setting: '/setting',
+    setting: '/settings',
     security: '/security',
 };
 export default routes;

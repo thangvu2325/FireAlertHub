@@ -4,11 +4,54 @@ import { privateRoutes, publicRoutes } from '~/routes';
 import { DefaultLayout } from '~/layout';
 import AuthContext from '~/AuthContext';
 import { useContext, createContext } from 'react';
+import { useEffect } from 'react';
+import { database } from './firebase_setup/firebase';
+import { get, ref, onValue } from 'firebase/database';
 export const StateContext = createContext();
 function App() {
     const { currentUser } = useContext(AuthContext);
     const [style, setStyle] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState(false);
+    const [data, setData] = useState([]);
+    const [admin, setAdmin] = useState('');
+    const [mq2Value, setMq2Value] = useState('');
+    const [fireValue, setFireValue] = useState('');
+    useEffect(() => {
+        if (currentUser) {
+            const userId = currentUser.uid;
+            get(ref(database, `role/${userId}`)).then((snapshot) => {
+                const role = snapshot.val().role;
+                if (role === 'adminA') {
+                    setAdmin('adminA');
+                } else if (role === 'adminB') {
+                    setAdmin('adminB');
+                } else {
+                    setAdmin('');
+                }
+            });
+            onValue(ref(database), (snapshot) => {
+                var data = snapshot.val();
+                setData(data);
+                if (!!data.From_HCMUT) {
+                    Object.keys(data['From_HCMUT']).forEach((key) => {
+                        if (data['From_HCMUT'][key].uid === currentUser.uid) {
+                            setMq2Value(data['From_HCMUT'][key].MQ2_value);
+                            setFireValue(data['From_HCMUT'][key].Fire_value);
+                        }
+                    });
+                }
+                if (!!data.From_UTE) {
+                    Object.keys(data['From_UTE']).forEach((key) => {
+                        if (data['From_UTE'][key].uid === currentUser.uid) {
+                            setMq2Value(data['From_UTE'][key].MQ2_value);
+                            setFireValue(data['From_UTE'][key].Fire_value);
+                        }
+                    });
+                }
+            });
+        }
+        // eslint-disable-next-line
+    }, [currentUser]);
     if (style === true) {
         document.documentElement.style.setProperty('--background-color', '#060714');
         document.documentElement.style.setProperty('--text-color', '#FBFBFB');
@@ -19,7 +62,19 @@ function App() {
         document.documentElement.style.setProperty('--white', '#f9f9f9');
     }
     return (
-        <StateContext.Provider value={{ style, setStyle, sidebarWidth, setSidebarWidth }}>
+        <StateContext.Provider
+            value={{
+                style,
+                setStyle,
+                sidebarWidth,
+                setSidebarWidth,
+                data,
+                setData,
+                admin,
+                mq2Value,
+                fireValue,
+            }}
+        >
             <Router>
                 <div className="App">
                     <Routes>
