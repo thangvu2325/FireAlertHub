@@ -102,7 +102,7 @@ function Setting() {
                             />
                         </span>
                         <div className={cx('container_map')}>
-                            {mapOpen ? <Leaflet parentCallback={callbackFunction} /> : null}
+                            {mapOpen ? <Leaflet locate={input} parentCallback={callbackFunction} /> : null}
                         </div>
                     </div>
                     <Button primary className={cx('btn')}>

@@ -7,11 +7,14 @@ import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet-geosearch/dist/geosearch.css';
+import 'leaflet-routing-machine';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
-function Leaflet(props) {
-    const [initialPosition, setInitialPosition] = useState([0, 0]);
+function Leaflet({ locate, ...props }) {
+    const [initialPosition, setInitialPosition] = useState([]);
     const [position, setPosition] = useState([10.787836, 106.60486]);
     const [selectedResult, setSelectedResult] = useState(null);
+    const [map, setMap] = useState(null);
     const zoom = 17;
 
     const iconDefault = new L.Icon({
@@ -30,6 +33,7 @@ function Leaflet(props) {
             setInitialPosition([latitude, longitude]);
         });
     }, []);
+
     const provider = new OpenStreetMapProvider();
 
     const SearchControl = (props) => {
@@ -76,27 +80,30 @@ function Leaflet(props) {
     };
 
     return (
-        <MapContainer center={position || initialPosition} zoom={zoom}>
-            <Markers />
+        <>
+            {console.log(position, initialPosition)}
+            <MapContainer center={position || initialPosition} zoom={zoom}>
+                <Markers />
 
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <SearchControl
-                provider={provider}
-                showMarker={true}
-                showPopup={false}
-                style={iconDefault}
-                popupFormat={({ result }) => result.label}
-                maxMarkers={3}
-                retainZoomLevel={false}
-                animateZoom={true}
-                autoClose={false}
-                searchLabel={'nhập địa chỉ ở đây!'}
-                keepResult={false}
-            />
-        </MapContainer>
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                />
+                <SearchControl
+                    provider={provider}
+                    showMarker={true}
+                    showPopup={false}
+                    style={iconDefault}
+                    popupFormat={({ result }) => result.label}
+                    maxMarkers={3}
+                    retainZoomLevel={false}
+                    animateZoom={true}
+                    autoClose={false}
+                    searchLabel={'nhập địa chỉ ở đây!'}
+                    keepResult={false}
+                />
+            </MapContainer>
+        </>
     );
 }
 
