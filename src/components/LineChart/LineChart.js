@@ -8,13 +8,9 @@ function LineChart(dataValue) {
     const [data, setData] = useState([]);
     // Counter state for new data points
     const [count, setCount] = useState(0);
-    console.log(data);
-    // const writeData = () => {
-    //     set(ref(database, 'User_using/data'), {
-    //         data: JSON.stringify(data),
-    //     });
-    // };
-    // writeData();
+    useEffect(()=>{
+
+    })
 
     useEffect(() => {
         const formattedData = {
@@ -40,9 +36,9 @@ function LineChart(dataValue) {
                 labels: data.map((item) => item.x),
                 datasets: [
                     {
-                        label: 'Value',
+                        label: 'Khói',
                         data: data.map((item) => item.y),
-                        fill: false,
+                        fill: true,
                         borderColor: '#5174D4',
                     },
                 ],

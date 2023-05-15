@@ -3,7 +3,7 @@ import styles from './SidebarHeader.module.scss';
 import { Link } from 'react-router-dom';
 import config from '~/config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faSmile } from '@fortawesome/free-solid-svg-icons';
+import {faSmile } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 

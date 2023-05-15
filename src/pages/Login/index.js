@@ -1,53 +1,79 @@
-import { useState, useContext } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '~/firebase_setup/firebase';
+import { useState} from 'react';
+import { loginUser } from "../../redux/apiRequest";
+import { useDispatch } from "react-redux";
 import Button from '~/components/Button';
 import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
-import AuthContext from '~/AuthContext';
-
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import {toast } from 'react-toastify';
 const cx = classNames.bind(styles);
 
 const Login = () => {
-    const navigate = useNavigate();
-    const { currentUser } = useContext(AuthContext);
+    const errorMessage = useSelector((state) => state.auth.login.errorMessage)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, seterror] = useState('');
-    const signIn = async (email, password) => {
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-            console.log(user);
-            return true;
-        } catch (error) {
-            return { error: error.message };
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const isRequired = (textCheck)=>{
+        if(textCheck === ''){
+            return 'Trường này là bắt buộc!!'
         }
-    };
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setEmail('');
-        setPassword('');
-        navigate('/');
-        const res = await signIn(email, password);
+      }
+    const handlePasswordChange = () => {
 
-        if (res.error) seterror(res.error);
-    };
-    // const autoNavigate = () => {
-    //     if (currentUser) {
-    //         navigate('/');
-    //     }
-    // };
-    // autoNavigate();
+        if(isRequired(password)){
+            setPasswordError(isRequired(password));
+        }
+        else if (password.length < 6) {
+          setPasswordError('Mật khẩu phải có ít nhất 6 ký tự');
+        } else {
+          setPasswordError('');
+        }
+      };
+      const handleEmailChange = () => {
+        if(isRequired(email)){
+            setEmailError(isRequired(email));
+        }
+        else
+        if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+          setEmailError('Email không hợp lệ');
+        } else {
+          setEmailError('');
+        }
+      };
+    const handleLogin = (e) => {
+        e.preventDefault();
+        handleEmailChange();
+        handlePasswordChange();
+        
+        if(passwordError || emailError){
+            return
+        }
+        else{
+            const newUser = {
+                email: email,
+                password: password,
+              };
+            loginUser(newUser, dispatch, navigate,toast)
+            if(errorMessage){
+              setPasswordError('Tài khoản hoặc mật khẩu không đúng!')
+            }
+        }
+      
+      };
     return (
         <>
             <div className={cx('wrap')}>
                 <div className={cx('container')}>
-                    <h2 className={cx('title')}>Đăng nhập</h2>
+                    <h2 className={cx('title',{
+                        user_sellect : true,
+                    })}>Đăng nhập
+                    </h2>
                     <div className={cx('content')}>
-                        {error ? <div>{error}</div> : null}
-                        <form onSubmit={handleSubmit} className={cx('form')}>
+                        <form onSubmit={handleLogin} className={cx('form')} >
                             <input
                                 className={cx('input')}
                                 type="text"
@@ -55,7 +81,10 @@ const Login = () => {
                                 value={email}
                                 placeholder="Your Email"
                                 onChange={(e) => setEmail(e.target.value)}
+                                onBlur={handleEmailChange}
                             />
+                            {emailError ?  <p className={cx('error-message')}>{emailError}</p>: '' }
+
                             <input
                                 className={cx('input')}
                                 type="password"
@@ -63,7 +92,11 @@ const Login = () => {
                                 value={password}
                                 placeholder="Your Password"
                                 onChange={(e) => setPassword(e.target.value)}
+                                onBlur={handlePasswordChange}
+
                             />
+                            {passwordError ?  <p className={cx('error-message')}>{passwordError}</p>: '' }
+
                             <Button primary type="submit" value="submit" className={cx('btn')}>
                                 Login
                             </Button>

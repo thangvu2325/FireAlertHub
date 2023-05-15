@@ -5,42 +5,46 @@ import { StateContext } from '~/App';
 import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState,useEffect } from 'react';
+import { onValue, ref } from 'firebase/database';
+import { database } from '~/firebase_setup/firebase';
 const cx = classNames.bind(styles);
 function ModalBox() {
-    const { data, admin } = useContext(StateContext);
+    const { admin } = useContext(StateContext);
     const [open, setOpen] = useState(false);
     const [warningData, setWarningData] = useState({});
-    let text;
-    console.log(warningData);
-    // eslint-disable-next-line default-case
-    switch (admin) {
-        case 'adminA':
-            text = 'From_HCMUT';
-            break;
-        case 'adminB':
-            text = 'From_UTE';
-            break;
-    }
+    const [data,setData] = useState([]);
+    const obj = {};
+    useEffect(()=>{
+        onValue(ref(database), (snapshot) => {
+            var dataFirebase = snapshot.val();
+            setData(dataFirebase);
+        });
+    },[])
+    
     useEffect(() => {
-        if (!!data[text]) {
-            var obj = {};
+        if(admin){
+            if (!!data[admin === 'adminA'?'From_HCMUT': 'adminB']) {
 
-            for (const key in data[text]) {
-                const value = data[text][key];
-                if (value.Warning) {
-                    obj = { ...obj, [key]: value };
+                for (const key in data[admin === 'adminA'?'From_HCMUT':'From_UTE']) {
+                    const value = data[admin === 'adminA'?'From_HCMUT':'From_UTE'][key];
+                    if (value.Warning) {
+                        obj[key] = value;
+                    }
+                    else if(obj[key]){
+                        delete obj[key];
+                    }
+                }
+                if (Object.keys(obj).length !== 0) {
+                    setWarningData({ ...obj });
+                    setOpen(true);
                 }
             }
-            if (obj) {
-                setWarningData({ ...obj });
-                setOpen(true);
-            }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+   
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
-
+    
     const handleClose = () => {
         setOpen(false);
         setWarningData([]);

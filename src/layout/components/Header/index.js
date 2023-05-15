@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AuthContext from '~/AuthContext';
 import { useContext } from 'react';
-import { signOut } from 'firebase/auth';
+import { logOut } from '~/redux/apiRequest';
+import {useDispatch , useSelector} from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logOutSuccess } from '~/redux/authSlice';
+import {createAxios} from '~/createInstance';
 import {
     faEllipsisVertical,
     faEarthAsia,
@@ -22,18 +24,10 @@ import Menu from '~/components/Popper/Menu';
 import { InboxIcon } from '~/components/Icons';
 import Image from '~/components/Image';
 import config from '~/config';
-import { auth } from '~/firebase_setup/firebase';
 import SwitchMode from '~/components/SwitchMode';
 import { StateContext } from '~/App';
 const cx = classNames.bind(styles);
-const handleSignOut = async () => {
-    try {
-        await signOut(auth);
-        return false;
-    } catch (error) {
-        return false;
-    }
-};
+
 
 const handleMenuChange = (menuItem) => {
     switch (menuItem.type) {
@@ -44,7 +38,7 @@ const handleMenuChange = (menuItem) => {
     }
     switch (menuItem.title) {
         case 'Logout':
-            handleSignOut();
+            menuItem.handleLogout();
             break;
         default:
     }
@@ -74,7 +68,16 @@ const MENU_ITEM = [
 export var barClickChecked = false;
 function Header() {
     const styleState = useContext(StateContext);
-    const { currentUser } = useContext(AuthContext);
+    const user = useSelector((state)=> state.auth.login.currentUser);
+    const accessToken = user?.accessToken;
+    const id = user?._doc?._id;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const axiosJWT = createAxios(user,dispatch,logOutSuccess);
+    const handleLogout = () =>{
+        logOut(dispatch,id,navigate, accessToken,axiosJWT);
+    }
+
     const userMenu = [
         {
             icon: <FontAwesomeIcon icon={faGear} />,
@@ -87,7 +90,8 @@ function Header() {
             title: 'Logout',
             to: config.routes.home,
             separate: false,
-        },
+            handleLogout,
+        },  
     ];
 
     const handleClickBars = () => {
@@ -97,11 +101,11 @@ function Header() {
     return (
         <header className={cx('wrapper')}>
             <div className={cx('logo-link')}>
-                <FontAwesomeIcon icon={currentUser ? faBars : faHome} onClick={handleClickBars} />
+                <FontAwesomeIcon icon={user?.accessToken ? faBars : faHome} onClick={handleClickBars} />
             </div>
             <div className={cx('actions')}>
                 <SwitchMode />
-                {currentUser ? (
+                {user?.accessToken ? (
                     <>
                         <Tippy delay={[0, 50]} content="Inbox" placement="bottom">
                             <button className={cx('action-btn')}>
@@ -121,8 +125,8 @@ function Header() {
                     </>
                 )}
                 <>
-                    <Menu items={currentUser ? userMenu : MENU_ITEM} onChange={handleMenuChange}>
-                        {currentUser ? (
+                    <Menu items={user?.accessToken ? userMenu : MENU_ITEM} onChange={handleMenuChange}>
+                        {user?.accessToken ? (
                             <Image
                                 src="https://64.media.tumblr.com/0720d562319a714c020710344ed67383/84bd6032ff13f728-fa/s1280x1920/085d228f71280869ce592e242cc1173c4a7c225f.jpg"
                                 className={cx('user-avatar')}

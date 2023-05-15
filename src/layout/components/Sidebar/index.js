@@ -3,7 +3,7 @@ import styles from './Sidebar.module.scss';
 
 import SidebarHeader from '~/components/SidebarHeader';
 import SidebarItem from '~/components/SidebarItem';
-import { BookIcon, DashboardIcon, HomeIcon, ServiceIcon } from '~/components/Icons';
+import { BookIcon, DashboardIcon, HomeIcon, SecurityIcon, ServiceIcon, SettingIcon } from '~/components/Icons';
 import { StateContext } from '~/App';
 import { useContext } from 'react';
 const cx = classNames.bind(styles);
@@ -11,7 +11,6 @@ function Sidebar() {
     const { admin } = useContext(StateContext);
     const styleState = useContext(StateContext);
     const checked = styleState.sidebarWidth;
-    console.log(admin);
     const MENU_ITEM = [
         {
             icon: <HomeIcon className={cx('svg-inline')} />,
@@ -38,14 +37,14 @@ function Sidebar() {
             ref: 'servicesLink',
         },
         {
-            icon: <ServiceIcon className={cx('svg-inline')} />,
+            icon: <SettingIcon className={cx('svg-inline')} />,
             title: 'Setting',
             to: 'setting',
             ref: 'settingLink',
         },
         {
-            icon: <ServiceIcon className={cx('svg-inline')} />,
-            title: 'Bảo Mật',
+            icon: <SecurityIcon className={cx('svg-inline')} />,
+            title: 'About us',
             to: 'security',
             ref: 'securityLink',
         },
@@ -70,13 +69,13 @@ function Sidebar() {
             ref: 'servicesLink',
         },
         {
-            icon: <ServiceIcon className={cx('svg-inline')} />,
+            icon: <SettingIcon className={cx('svg-inline')} />,
             title: 'Setting',
             to: 'setting',
             ref: 'settingLink',
         },
         {
-            icon: <ServiceIcon className={cx('svg-inline')} />,
+            icon: <SecurityIcon className={cx('svg-inline')} />,
             title: 'User',
             to: 'services',
             ref: 'securityLink',

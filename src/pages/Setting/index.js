@@ -3,30 +3,30 @@ import classNames from 'classnames/bind';
 import Leaflet from '~/components/Leaflet';
 import Button from '~/components/Button';
 import { useState, useRef } from 'react';
-import AuthContext from '~/AuthContext';
-import { useContext } from 'react';
-import { StateContext } from '~/App';
+import { useSelector } from 'react-redux';
+
 import { useEffect } from 'react';
 const cx = classNames.bind(styles);
 
 function Setting() {
-    const { currentUser } = useContext(AuthContext);
-    const { data, admin } = useContext(StateContext);
+    const currentUser = useSelector((state) => state.auth.login.currentUser)
+    console.log(currentUser)
     const [mapOpen, setMapOpen] = useState(false);
     const [input, setInput] = useState('');
-    const [inputEmail, setInputEmail] = useState(currentUser.email);
-    const [inputPhone, setInputPhone] = useState('');
-    const [inputPassword, setInputPassword] = useState('');
-    const [locate, setLocate] = useState('');
-    useEffect(() => {
-        if (!!data.User_using && currentUser) {
-            Object.entries(data.User_using).forEach((item) => {
-                if (item[1].uid === currentUser.uid) {
-                    setInput(item[1].locate);
-                }
-            });
-        }
-    }, [currentUser, data]);
+    const [inputEmail, setInputEmail] = useState(currentUser._doc.email);
+    const [inputPhone, setInputPhone] = useState(currentUser._doc.phone);
+    const [inputPassword, setInputPassword] = useState('*******');
+    const [locate, setLocate] = useState(currentUser._doc.location);
+    console.log(currentUser._doc)
+    // useEffect(() => {
+    //     if (!!data.User_using && currentUser) {
+    //         Object.entries(data.User_using).forEach((item) => {
+    //             if (item[1].uid === currentUser.uid) {
+    //                 setInput(item[1].locate);
+    //             }
+    //         });
+    //     }
+    // }, [currentUser, data]);
     const handOpenMap = () => {
         setMapOpen(!mapOpen);
     };
@@ -36,7 +36,7 @@ function Setting() {
     const ref = useRef();
     return (
         <div className={cx('wrap')}>
-            {admin ? null : (
+            {!currentUser?.accessToken ? null : (
                 <div className={cx('container')}>
                     <div className={cx('action')}>
                         <span className={cx('content')}>
@@ -58,7 +58,7 @@ function Setting() {
                         <span className={cx('content')}>
                             <h4 className={cx('title')}>Phone:</h4>
                             <input
-                                type="number"
+                                type="string"
                                 className={cx('input-locate')}
                                 ref={ref}
                                 value={inputPhone}

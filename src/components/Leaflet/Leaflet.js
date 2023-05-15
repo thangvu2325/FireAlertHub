@@ -14,7 +14,7 @@ function Leaflet({ locate, ...props }) {
     const [initialPosition, setInitialPosition] = useState([]);
     const [position, setPosition] = useState([10.787836, 106.60486]);
     const [selectedResult, setSelectedResult] = useState(null);
-    const [map, setMap] = useState(null);
+    // const [map, setMap] = useState(null);
     const zoom = 17;
 
     const iconDefault = new L.Icon({
@@ -81,7 +81,6 @@ function Leaflet({ locate, ...props }) {
 
     return (
         <>
-            {console.log(position, initialPosition)}
             <MapContainer center={position || initialPosition} zoom={zoom}>
                 <Markers />
 

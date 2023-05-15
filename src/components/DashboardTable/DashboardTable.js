@@ -2,13 +2,14 @@ import styles from './DashboardTable.module.scss';
 import classNames from 'classnames/bind';
 import { useRef } from 'react';
 
+
 const cx = classNames.bind(styles);
 function DashboardTable({ data = {}, primary = false }) {
-    console.log(data);
     const ref = useRef();
     const handleMap = (e) => {
-        console.log(e.target.innerText);
+        window.open(`https://www.google.com/maps/dir/?api=1&origin=current+location&destination=${e.target.innerText}`,'_blank');
     };
+
     return (
         <table className={cx('container')}>
             <thead>
@@ -47,7 +48,7 @@ function DashboardTable({ data = {}, primary = false }) {
                                   <td>{value.Fire_value}</td>
                                   <td>{value.Room}</td>
                                   <td onClick={handleMap} ref={ref}>
-                                      {value.locate}
+                                      {value.GPS_0}
                                   </td>
                               </tr>
                           );
