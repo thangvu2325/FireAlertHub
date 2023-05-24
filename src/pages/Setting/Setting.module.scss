@@ -1,27 +1,46 @@
 .wrap {
-    background-color: var(--white);
-    margin: 100px auto;
-    width: 600px;
-    height: 500px;
-    border-radius: 4px;
+    height: 100vh;
     position: relative;
 }
+.heading {
+    line-height: 1.4;
+    color: var(--text-color);
+    text-align: left;
+    .title{
+       padding: 40px 40px;
+       font-family: 'Pacifico';
+       font-weight: 600;
+       font-size: 3rem;
+       text-align: left;
+       user-select: none;
+    }
 
+}
 .container {
+    width: 100%;
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 40%;
     transform: translate(-50%, -50%);
 }
-.action {
-    text-align: center;
-    margin: 20px 0;
-}
 .content {
-    display: flex;
+    width: 800px;
+    background-color: var(--white);
+    border: 6px solid var(--white);
+    margin: auto;
+    padding: 8px 50px;
+    border-radius: 4px;
+    cursor: pointer;
 }
+
+.action {
+   display: flex;
+   margin: 8px 0;
+}
+
 .title {
-    width: 30%;
+    width: 100px;
+    line-height: 44px;
 }
 .input-locate {
     flex: 1;
@@ -31,11 +50,22 @@
     border-radius: 4px;
     color: var(--text-color);
 }
+.btn-change{
+    width: 100px;
+
+}
+.action-btn{
+    display: block;
+    width: 100%;
+    text-align: right;
+}
 .btn {
     margin: 16px 8px;
     color: var(--text-color);
 }
 .container_map {
     position: absolute;
-    left: 300px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
 }

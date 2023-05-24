@@ -5,7 +5,7 @@ import { DefaultLayout } from '~/layout';
 import { createContext } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import MessengerCustomerChat from 'react-messenger-customer-chat';
+// import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 export const StateContext = createContext();
 
@@ -14,7 +14,7 @@ function App() {
     const [style, setStyle] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState(false);
     const [admin, setAdmin] = useState('');
-
+    // const location = useLocation();
     useEffect(() => {
         if (currentUser) {
             if (currentUser?._doc.roles[0].name === 'adminA') {
@@ -27,7 +27,16 @@ function App() {
         }
         // eslint-disable-next-line
     }, [currentUser]);
-    console.log(currentUser)
+    // useEffect(()=>{
+    //     let title = 'Fire Alarm'; // Giá trị mặc định
+    //     if (location.pathname === '/login') {
+    //     title = 'Login';
+    //     } else if (location.pathname === '/contact') {
+    //     title = 'Liên hệ';
+    //     }
+
+    // document.title = title;
+    // },[location])
     if (style === true) {
         document.documentElement.style.setProperty('--background-color', '#060714');
         document.documentElement.style.setProperty('--text-color', '#FBFBFB');
@@ -49,11 +58,10 @@ function App() {
         >
             <Router>
                 <div className="App">
-                <MessengerCustomerChat
-                    pageId="118879814536428"
-                    appId="930949868024444"
-                    // htmlRef="<REF_STRING>"
-                />,
+                    {/* <MessengerCustomerChat
+                        pageId="118879814536428"
+                        appId="930949868024444"
+                    /> */}
                     <Routes>
                         <>  
                             {currentUser?.accessToken

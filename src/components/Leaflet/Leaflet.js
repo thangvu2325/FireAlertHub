@@ -1,6 +1,5 @@
 import { Marker, MapContainer, TileLayer, useMap, useMapEvents, Popup } from 'react-leaflet';
 import { useEffect, useState } from 'react';
-import './Leaflet.scss';
 import 'leaflet/dist/leaflet.css';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import L from 'leaflet';
@@ -9,14 +8,15 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet-geosearch/dist/geosearch.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import { IconSquareX } from '@tabler/icons-react';
+import './Leaflet.scss';
 
-function Leaflet({ locate, ...props }) {
+function Leaflet({ locate = "9.785439, 105.624398", onClose, ...props }) {
     const [initialPosition, setInitialPosition] = useState([]);
-    const [position, setPosition] = useState([10.787836, 106.60486]);
+    const [position, setPosition] = useState(locate.split(','));
     const [selectedResult, setSelectedResult] = useState(null);
-    // const [map, setMap] = useState(null);
     const zoom = 17;
-
+    console.log(locate);
     const iconDefault = new L.Icon({
         iconUrl: icon,
         shadowUrl: iconShadow,
@@ -24,6 +24,7 @@ function Leaflet({ locate, ...props }) {
         shadowAnchor: [12, 41], // the same for the shadow
         popupAnchor: [0, -41], // point from which the popup should open relative to the iconAnchor
     });
+
     const sendData = (string) => {
         props.parentCallback(string);
     };
@@ -80,7 +81,6 @@ function Leaflet({ locate, ...props }) {
     };
 
     return (
-        <>
             <MapContainer center={position || initialPosition} zoom={zoom}>
                 <Markers />
 
@@ -101,8 +101,10 @@ function Leaflet({ locate, ...props }) {
                     searchLabel={'nhập địa chỉ ở đây!'}
                     keepResult={false}
                 />
+                <button className="close-button" onClick={onClose}>
+                    <IconSquareX />
+                </button>
             </MapContainer>
-        </>
     );
 }
 

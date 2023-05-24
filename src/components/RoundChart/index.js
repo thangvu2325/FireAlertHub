@@ -5,7 +5,7 @@ function RoundChart({ className, ...props }) {
     return (
         <CircularProgressbar
             value={props.value.value}
-            text={`${(100 * props.value.value) / props.value.maxValue}%`}
+            text={`${Math.round((100 * props.value.value) / props.value.maxValue)}%`}
             maxValue={props.value.maxValue}
             className={className}
             styles={{
@@ -53,9 +53,9 @@ function RoundChart({ className, ...props }) {
                     fontSize: '16px',
                 },
                 // Customize background - only used when the `background` prop is true
-                background: {
-                    fill: '#3e98c7',
-                },
+                // background: {
+                //     fill: '#fff',
+                // },
             }}
         />
     );

@@ -24,10 +24,10 @@ function ModalBox() {
     
     useEffect(() => {
         if(admin){
-            if (!!data[admin === 'adminA'?'From_HCMUT': 'adminB']) {
-
+            if (!!data[admin === 'adminA'?'From_HCMUT': 'From_UTE']) {
                 for (const key in data[admin === 'adminA'?'From_HCMUT':'From_UTE']) {
                     const value = data[admin === 'adminA'?'From_HCMUT':'From_UTE'][key];
+                    console.log(value)
                     if (value.Warning) {
                         obj[key] = value;
                     }
@@ -40,6 +40,7 @@ function ModalBox() {
                     setOpen(true);
                 }
             }
+
         }
    
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,7 +52,7 @@ function ModalBox() {
     };
     return (
         <>
-            {open && warningData ? (
+            {warningData.length !== 0 && open  ? (
                 <>
                     <div className={cx('shadow')}></div>
 

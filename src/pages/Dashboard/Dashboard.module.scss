@@ -5,16 +5,39 @@
     height: 100vh;
     position: relative;
 }
+.backgroundShadow{
+    background-color: rgba($color: #000000, $alpha: 0.2);
+}
+.shadow{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .plug-icon{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 80%;
+        height: 600px;
+        background-color: rgba($color: #fff, $alpha: 0.2);
+        border-radius: 15px;
+    }
+}
 .heading {
-    font-family: 'Pacifico';
-    font-weight: 600;
-    font-size: 1.8rem;
-    text-align: center;
     line-height: 1.4;
     color: var(--text-color);
     text-align: left;
-    width: fit-content;
-    margin: 12px 24px;
+    .title{
+       padding: 40px 40px;
+       font-family: 'Pacifico';
+       font-weight: 600;
+       font-size: 3rem;
+       text-align: left;
+       user-select: none;
+    }
+
 }
 .container {
     width: 100%;
@@ -65,8 +88,7 @@
 }
 
 .parameter {
-    padding: 8px 16px;
-    height: 210px;
+    padding: 8px 16px;  
 }
 
 .line-chart {
@@ -74,7 +96,7 @@
     margin-left: auto;
     margin-right: auto;
     width: 500px;
-    height: 500px;
+    height: 400px;
 }
 .round-chart {
     position: absolute;

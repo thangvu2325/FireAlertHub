@@ -23,7 +23,7 @@ import {
 export const loginUser = async (user, dispatch, navigate,toast) => {
   dispatch(loginStart());
   try {
-    const res = await axios.post("http://localhost:5000/auth/login", user);
+    const res = await axios.post("https://backendjwt.onrender.com/auth/login", user);
     dispatch(loginSuccess(res.data));
     toast.success('Đăng nhập thành công');
     navigate("/");
@@ -36,7 +36,7 @@ export const loginUser = async (user, dispatch, navigate,toast) => {
 export const registerUser = async (user, dispatch, navigate, toast) => {
   dispatch(registerStart());
   try {
-    await axios.post("http://localhost:5000/auth/register", user);
+    await axios.post("https://backendjwt.onrender.com/auth/register", user);
     dispatch(registerSuccess());
     toast.success('Đăng ký thành công!')
     navigate("/login");
@@ -51,7 +51,7 @@ export const registerUser = async (user, dispatch, navigate, toast) => {
 export const getAllUsers = async (accessToken, dispatch, axiosJWT) => {
   dispatch(getUsersStart());
   try {
-    const res = await axios.get("http://localhost:5000/user", {
+    const res = await axios.get("https://backendjwt.onrender.com/user", {
       withCredentials: true,
     });
 
@@ -76,7 +76,7 @@ export const deleteUser = async (accessToken, dispatch, id, axiosJWT) => {
 export const logOut = async (dispatch, id, navigate, accessToken, axiosJWT) => {
   dispatch(logOutStart());
   try {
-    await axiosJWT.post("http://localhost:5000/auth/logout", id, {
+    await axiosJWT.post("https://backendjwt.onrender.com/auth/logout", id, {
       headers: { token: `${accessToken}` },
     });
     dispatch(logOutSuccess());

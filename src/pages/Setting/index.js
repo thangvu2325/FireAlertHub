@@ -2,31 +2,20 @@ import styles from './Setting.module.scss';
 import classNames from 'classnames/bind';
 import Leaflet from '~/components/Leaflet';
 import Button from '~/components/Button';
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { useSelector } from 'react-redux';
-
-import { useEffect } from 'react';
+import { StateContext } from '~/App';
 const cx = classNames.bind(styles);
 
 function Setting() {
     const currentUser = useSelector((state) => state.auth.login.currentUser)
-    console.log(currentUser)
     const [mapOpen, setMapOpen] = useState(false);
-    const [input, setInput] = useState('');
     const [inputEmail, setInputEmail] = useState(currentUser._doc.email);
     const [inputPhone, setInputPhone] = useState(currentUser._doc.phone);
     const [inputPassword, setInputPassword] = useState('*******');
     const [locate, setLocate] = useState(currentUser._doc.location);
-    console.log(currentUser._doc)
-    // useEffect(() => {
-    //     if (!!data.User_using && currentUser) {
-    //         Object.entries(data.User_using).forEach((item) => {
-    //             if (item[1].uid === currentUser.uid) {
-    //                 setInput(item[1].locate);
-    //             }
-    //         });
-    //     }
-    // }, [currentUser, data]);
+    const { admin } = useContext(StateContext);
+
     const handOpenMap = () => {
         setMapOpen(!mapOpen);
     };
@@ -36,81 +25,90 @@ function Setting() {
     const ref = useRef();
     return (
         <div className={cx('wrap')}>
-            {!currentUser?.accessToken ? null : (
+            <div className={cx('heading')}>
+                <h1 className={cx('title')}>Setting</h1>
+            </div>
+            {admin ? null : (
                 <div className={cx('container')}>
-                    <div className={cx('action')}>
-                        <span className={cx('content')}>
-                            <h4 className={cx('title')}>Email:</h4>
-                            <input
-                                type="email"
-                                className={cx('input-locate')}
-                                ref={ref}
-                                value={inputEmail}
-                                name="email"
-                                onChange={(e) => {
-                                    setInputEmail(e.target.value);
-                                }}
-                                disabled
-                            />
-                        </span>
-                    </div>
-                    <div className={cx('action')}>
-                        <span className={cx('content')}>
-                            <h4 className={cx('title')}>Phone:</h4>
-                            <input
-                                type="string"
-                                className={cx('input-locate')}
-                                ref={ref}
-                                value={inputPhone}
-                                name="phone"
-                                onChange={(e) => {
-                                    setInputPhone(e.target.value);
-                                }}
-                                disabled
-                            />
-                        </span>
-                    </div>
-                    <div className={cx('action')}>
-                        <span className={cx('content')}>
-                            <h4 className={cx('title')}>Password:</h4>
-                            <input
-                                type="password"
-                                className={cx('input-locate')}
-                                ref={ref}
-                                value={inputPassword}
-                                name="password"
-                                onChange={(e) => {
-                                    setInputPassword(e.target.value);
-                                }}
-                                disabled
-                            />
-                        </span>
-                    </div>
-                    <div className={cx('action')}>
-                        <span className={cx('content')}>
-                            <h4 className={cx('title')}>Vị trí:</h4>
-                            <input
-                                className={cx('input-locate')}
-                                ref={ref}
-                                value={locate || input}
-                                name="locate"
-                                placeholder="Nhập vị trí ở đây."
-                                onChange={(e) => {
-                                    setInput(e.target.value);
-                                }}
-                                disabled
-                            />
+                    <div className={cx('content')}> 
+                        <div className={cx('action')}>
+                                <h4 className={cx('title')}>Email:</h4>
+                                <input
+                                    type="email"
+                                    className={cx('input-locate')}
+                                    ref={ref}
+                                    value={inputEmail}
+                                    name="email"
+                                    onChange={(e) => {
+                                        setInputEmail(e.target.value);
+                                    }}
+                                    disabled
+                                />
+                                <Button className={cx('btn-change')} outline>Change</Button>
+                        </div>
+                        <div className={cx('action')}>
+                                <h4 className={cx('title')}>Phone:</h4>
+                                <input
+                                    type="string"
+                                    className={cx('input-locate')}
+                                    ref={ref}
+                                    value={inputPhone}
+                                    name="phone"
+                                    onChange={(e) => {
+                                        setInputPhone(e.target.value);
+                                    }}
+                                    disabled
+                                />
+                                <Button className={cx('btn-change')} outline>Change</Button>
+                        </div>
+                        <div className={cx('action')}>
+                                <h4 className={cx('title')}>Password:</h4>
+                                <input
+                                    type="password"
+                                    className={cx('input-locate')}
+                                    ref={ref}
+                                    value={inputPassword}
+                                    name="password"
+                                    onChange={(e) => {
+                                        setInputPassword(e.target.value);
+                                    }}
+                                    disabled
+                                />
+                                <Button className={cx('btn-change')} outline>Change</Button>
+    
+                        </div>
+                        <div className={cx('action')}>
+                                <h4 className={cx('title')}>Vị trí:</h4>
+                                <input
+                                    className={cx('input-locate')}
+                                    ref={ref}
+                                    value={locate}
+                                    name="locate"
+                                    placeholder="Nhập vị trí ở đây."
+                                    onChange={(e) => {
+                                        setLocate(e.target.value);
+                                    }}
+                                    disabled
+                                />
+                                <Button outline onClick={handOpenMap} className={cx('btn-change')}>
+                                    Map
+                                </Button>
+                                {/* <Button className={cx('btn-change')} outline>Change</Button> */}
+    
+                         
+    
+                        </div>
+                        <span className={cx('action-btn')}>
+
+                            <Button primary className={cx('btn')}>
+                            Lưu
+                            </Button>
                         </span>
                         <div className={cx('container_map')}>
-                            {mapOpen ? <Leaflet locate={input} parentCallback={callbackFunction} /> : null}
+                                {mapOpen ? <Leaflet locate={locate} parentCallback={callbackFunction} onClose= {handOpenMap} /> : null}
                         </div>
                     </div>
-                    <Button primary className={cx('btn')}>
-                        Lưu
-                    </Button>
-                    <Button primary onClick={handOpenMap} className={cx('btn')}>
-                        Open Map
-                    </Button>
+                   
                 </div>
             )}
         </div>

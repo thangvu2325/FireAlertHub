@@ -26,6 +26,8 @@ import Image from '~/components/Image';
 import config from '~/config';
 import SwitchMode from '~/components/SwitchMode';
 import { StateContext } from '~/App';
+import ModalNotifyState from '~/components/ModalNotifyState'
+import { useState } from 'react';
 const cx = classNames.bind(styles);
 
 
@@ -69,6 +71,7 @@ export var barClickChecked = false;
 function Header() {
     const styleState = useContext(StateContext);
     const user = useSelector((state)=> state.auth.login.currentUser);
+    const [showModalMessage, setShowModalMessage] = useState(false);
     const accessToken = user?.accessToken;
     const id = user?._doc?._id;
     const dispatch = useDispatch();
@@ -77,7 +80,10 @@ function Header() {
     const handleLogout = () =>{
         logOut(dispatch,id,navigate, accessToken,axiosJWT);
     }
-
+    const handleShowModalMessage = ()=>{
+        setShowModalMessage(!showModalMessage);
+    }
+   
     const userMenu = [
         {
             icon: <FontAwesomeIcon icon={faGear} />,
@@ -100,15 +106,16 @@ function Header() {
 
     return (
         <header className={cx('wrapper')}>
+            <ModalNotifyState showModalMessage = {showModalMessage}  setShowModalMessage= {setShowModalMessage}/>
             <div className={cx('logo-link')}>
                 <FontAwesomeIcon icon={user?.accessToken ? faBars : faHome} onClick={handleClickBars} />
             </div>
             <div className={cx('actions')}>
-                <SwitchMode />
                 {user?.accessToken ? (
                     <>
                         <Tippy delay={[0, 50]} content="Inbox" placement="bottom">
-                            <button className={cx('action-btn')}>
+                            <button className={cx('action-btn')} onClick = {handleShowModalMessage} 
+                            >
                                 <InboxIcon />
                                 <span className={cx('badge')}>12</span>
                             </button>
@@ -140,6 +147,8 @@ function Header() {
                         )}
                     </Menu>
                 </>
+                <SwitchMode />
+
             </div>
         </header>
     );

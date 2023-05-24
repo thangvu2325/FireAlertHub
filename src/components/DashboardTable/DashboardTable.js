@@ -11,51 +11,58 @@ function DashboardTable({ data = {}, primary = false }) {
     };
 
     return (
-        <table className={cx('container')}>
-            <thead>
-                <tr>
-                    <th>
-                        <h1>User</h1>
-                    </th>
-
-                    <th>
-                        <h1>Nồng độ khối</h1>
-                    </th>
-                    <th>
-                        <h1>Lửa</h1>
-                    </th>
-
-                    <th>
-                        <h1>Room</h1>
-                    </th>
-                    <th>
-                        <h1>Sites</h1>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {!!data
-                    ? Object.entries(data).map(([key, value]) => {
-                          return (
-                              <tr
-                                  key={key}
-                                  className={cx({
-                                      primary,
-                                  })}
-                              >
-                                  <td>{key}</td>
-                                  <td>{value.MQ2_value / 10}%</td>
-                                  <td>{value.Fire_value}</td>
-                                  <td>{value.Room}</td>
-                                  <td onClick={handleMap} ref={ref}>
-                                      {value.GPS_0}
-                                  </td>
-                              </tr>
-                          );
-                      })
-                    : null}
-            </tbody>
-        </table>
+       <div className={cx('wrap')}>
+            <div className={cx('header')}>
+                {primary ?<h1 className={cx('',{primary})}>Cảnh báo những nơi xảy ra cháy.!</h1>: <h1> Danh sách các hộ sử dụng thiết bị báo cháy.!</h1>}
+            </div>
+            <table className={cx('container')}>
+                <thead>
+                    <tr className={cx('',{
+                        main : true,
+                    })}>
+                        <th>
+                            <h1>User</h1>
+                        </th>
+    
+                        <th>
+                            <h1>Nồng độ khối</h1>
+                        </th>
+                        <th>
+                            <h1>Lửa</h1>
+                        </th>
+    
+                        <th>
+                            <h1>Room</h1>
+                        </th>
+                        <th>
+                            <h1>Sites</h1>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {!!data
+                        ? Object.entries(data).map(([key, value]) => {
+                              return (
+                                  <tr
+                                      key={key}
+                                      className={cx({
+                                          primary,
+                                      })}
+                                  >
+                                      <td>{key}</td>
+                                      <td>{Math.round(value.Smoke_value*100 / 7000)}%</td>
+                                      <td>{value.Fire_value}</td>
+                                      <td>{value.Room}</td>
+                                      <td onClick={handleMap} ref={ref}>
+                                          {value.locate}
+                                      </td>
+                                  </tr>
+                              );
+                          })
+                        : null}
+                </tbody>
+            </table>
+       </div>
     );
 }
 export default DashboardTable;

@@ -4,7 +4,6 @@ import styles from './DefaultLayout.module.scss';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import ModalBox from '~/components/ModalBox';
-
 const cx = classNames.bind(styles);
 
 function DefaultLayout({ children }) {
@@ -13,16 +12,16 @@ function DefaultLayout({ children }) {
         setChecked(childData);
     };
     return (
-        <div className={cx('wrapper')}>
-            <ModalBox />
-            <Sidebar checked={checked} />
-            <div className={cx('wrapper-content')}>
-                <Header parentCallback={callbackFunction} />
-                <div className={cx('container')}>
-                    <div className={cx('content')}>{children}</div>
+            <div className={cx('wrapper')}>
+                <ModalBox />
+                <Sidebar checked={checked} />
+                <div className={cx('wrapper-content')}>
+                    <Header parentCallback={callbackFunction} />
+                    <div className={cx('container')}>
+                        <div className={cx('content')}>{children}</div>
+                    </div>
                 </div>
             </div>
-        </div>
     );
 }
 

@@ -198,9 +198,7 @@ function Signup() {
                             {phoneError ?  <p className={cx('error-message')}>{phoneError}</p>: '' }
                     
                             <input
-                                className={cx('input',{
-                                    user_sellect : true,
-                                })}
+                                className={cx('input')}
                                 type="text"
                                 name="locate"
                                 value={locate}
@@ -238,7 +236,7 @@ function Signup() {
                             </Button>
                         </div>
                         <div className={cx('map')}>
-                            {openMap ? <Leaflet parentCallback={callbackFunction} /> : null}
+                            {openMap ? <Leaflet parentCallback={callbackFunction} onClose={handleMap} /> : null}
                         </div>
                     </div>
                 </div>

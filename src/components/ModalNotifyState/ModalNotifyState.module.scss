@@ -1,0 +1,11 @@
+.modal-custom{
+    top: 100px; /* Đặt khoảng cách từ đỉnh của trang */
+    transform: translateY(0); /* Ghi đè giá trị mặc định của transform */
+    background-color: var(--background-color);
+}
+.message{
+    color: #161823;
+}
+#modal-title{
+    color: #161823;
+}

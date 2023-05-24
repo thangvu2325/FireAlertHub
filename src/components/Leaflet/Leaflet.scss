@@ -1,4 +1,18 @@
 .leaflet-container {
-    width: 400px;
-    height: 300px;
+    width: 700px;
+    height: 550px;
+}
+
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 3px 8px;
+    cursor: pointer;
+    z-index: 1000;
+    color: black;
 }
