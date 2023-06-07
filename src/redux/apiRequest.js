@@ -76,9 +76,9 @@ export const deleteUser = async (accessToken, dispatch, id, axiosJWT) => {
 export const logOut = async (dispatch, id, navigate, accessToken, axiosJWT) => {
   dispatch(logOutStart());
   try {
-    await axiosJWT.post("https://backendjwt.onrender.com/auth/logout", id, {
-      headers: { token: `${accessToken}` },
-    });
+    // await axiosJWT.post("https://backendjwt.onrender.com/auth/logout", id, {
+    //   headers: { token: `${accessToken}` },
+    // });
     dispatch(logOutSuccess());
     navigate("/login");
   } catch (err) {

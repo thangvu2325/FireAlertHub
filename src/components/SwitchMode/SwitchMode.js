@@ -4,7 +4,7 @@ import { useContext, useRef } from 'react';
 import { StateContext } from '~/App';
 
 const cx = classNames.bind(styles);
-function SwitchMode() {
+function SwitchMode({isTabletOrMobile}) {
     // eslint-disable-next-line
     const styleState = useContext(StateContext);
     const ref = useRef();

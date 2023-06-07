@@ -4,6 +4,7 @@
 .wrap {
     height: 100vh;
     position: relative;
+    width: 100%;
 }
 .backgroundShadow{
     background-color: rgba($color: #000000, $alpha: 0.2);
@@ -92,11 +93,15 @@
 }
 
 .line-chart {
-    margin-top: 50px;
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+.line-chart-content{
+    width: 70%;
     margin-left: auto;
     margin-right: auto;
-    width: 500px;
-    height: 400px;
+    margin-bottom: 100px;
 }
 .round-chart {
     position: absolute;

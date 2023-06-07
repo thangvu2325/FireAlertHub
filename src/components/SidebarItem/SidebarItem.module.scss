@@ -1,9 +1,10 @@
 .wrapper {
     font-size: 1.8rem;
-
+    margin: 8px 8px 0;
+}
+.wrapper.isDesktop{
     margin: 48px 8px 0;
 }
-
 .container {
     display: block;
     height: 48px;

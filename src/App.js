@@ -5,7 +5,8 @@ import { DefaultLayout } from '~/layout';
 import { createContext } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-// import MessengerCustomerChat from 'react-messenger-customer-chat';
+// import { useMediaQuery } from 'react-responsive';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 export const StateContext = createContext();
 
@@ -14,6 +15,12 @@ function App() {
     const [style, setStyle] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState(false);
     const [admin, setAdmin] = useState('');
+ 
+    // const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
+    // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    // const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
+    // const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
+    // setInterval(()=>{console.log(`isTabletOrMobile:${isTabletOrMobile}`)},1000)
     // const location = useLocation();
     useEffect(() => {
         if (currentUser) {
@@ -27,16 +34,6 @@ function App() {
         }
         // eslint-disable-next-line
     }, [currentUser]);
-    // useEffect(()=>{
-    //     let title = 'Fire Alarm'; // Giá trị mặc định
-    //     if (location.pathname === '/login') {
-    //     title = 'Login';
-    //     } else if (location.pathname === '/contact') {
-    //     title = 'Liên hệ';
-    //     }
-
-    // document.title = title;
-    // },[location])
     if (style === true) {
         document.documentElement.style.setProperty('--background-color', '#060714');
         document.documentElement.style.setProperty('--text-color', '#FBFBFB');
@@ -58,10 +55,10 @@ function App() {
         >
             <Router>
                 <div className="App">
-                    {/* <MessengerCustomerChat
+                    <MessengerCustomerChat
                         pageId="118879814536428"
                         appId="930949868024444"
-                    /> */}
+                    />
                     <Routes>
                         <>  
                             {currentUser?.accessToken

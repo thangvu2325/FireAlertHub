@@ -1,9 +1,11 @@
+/* eslint-disable no-sequences */
 import classNames from 'classnames/bind';
 import styles from './Signup.module.scss';
 import { useState } from 'react';
 import Button from '~/components/Button';
 import { useNavigate } from 'react-router-dom';
 import Leaflet from '~/components/Leaflet';
+import { useMediaQuery } from 'react-responsive';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '~/redux/apiRequest';
 import { set, ref } from 'firebase/database';
@@ -34,11 +36,34 @@ function Signup() {
             email,
         });
     }
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const handleRotateScreen = async () => {
+        if ('screen' in window && 'orientation' in window.screen) {
+          const currentOrientation = window.screen.orientation.type;
+      
+          try {
+            if (currentOrientation.startsWith('portrait-')) {
+              await window.screen.orientation.lock('landscape');
+            } else {
+              await window.screen.orientation.lock('portrait');
+            }
+          } catch (error) {
+            console.error('Không thể xoay màn hình:', error);
+          }
+        } else {
+          console.warn('Screen Orientation API không được hỗ trợ trên trình duyệt này.');
+        }
+      };
+    const handleClick = ()=>{
+        handleRotateScreen();
+        handleMap()
+    }
     const isRequired = (textCheck)=>{
         if(textCheck === ''){
             return 'Trường này là bắt buộc!!'
         }
       }
+
     const handlePasswordChange = () => {
         if(isRequired(password)){
             setPasswordError(isRequired(password));
@@ -114,11 +139,17 @@ function Signup() {
         };
         
         if(registerUser(newUser,dispatch,navigate,toast)){
+            setEmail('');
+            setPassword('');
+            setPassword2('');
+            setPhone('');
+            setLocate('');
+            setInform('');
             writeUserData(locate,email,inform)
         }
 
       }
-    const handleSignup = async () => {
+    const handleSignup = () => {
         handlePasswordChange();
         handlePassword2Check();
         handleLocationCheck();
@@ -128,13 +159,7 @@ function Signup() {
         if (passwordError ||password2Error ||phoneError||emailError||locationError||informError ) {
             return;
         } else {
-            setEmail('');
-            setPassword('');
-            setPassword2('');
-            setPhone('');
-            setLocate('');
-            setInform('');
-            handleRegister(email, password, phoneNumber, locate, inform);
+             handleRegister(email, password, phoneNumber, locate, inform);
         }
     };
     const handleMap = () => {
@@ -143,7 +168,9 @@ function Signup() {
     return (
         <>
             <div className={cx('wrap')}>
-                <div className={cx('container')}>
+                    <div className={cx('container',{
+                        isDesktop : !isTabletOrMobile,
+                    })}>
                     <h2 className={cx('title',{
                         user_sellect : true,
                     })}>Sign Up</h2>
@@ -223,7 +250,7 @@ function Signup() {
                             <Button className={cx('btn')} onClick={handleSignup} primary>
                                 Submit
                             </Button>
-                            <Button className={cx('btn-openMap')} outline onClick={handleMap}>
+                            <Button className={cx('btn-openMap')} outline onClick={handleClick}>
                                 Map
                             </Button>
                         </div>

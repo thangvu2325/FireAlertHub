@@ -6,10 +6,13 @@ import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useMediaQuery } from 'react-responsive';
 import {toast } from 'react-toastify';
+import { useEffect } from 'react';
 const cx = classNames.bind(styles);
 
 const Login = () => {
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
     const errorMessage = useSelector((state) => state.auth.login.errorMessage)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -64,10 +67,29 @@ const Login = () => {
         }
       
       };
+
+    useEffect(()=>{
+        const lockOrientation = async () => {
+          if ('screen' in window && 'orientation' in window.screen) {
+            try {
+              const currentOrientation = window.screen.orientation.type;
+              await window.screen.orientation.lock(currentOrientation);
+            } catch (error) {
+              console.error('Không thể khóa hướng màn hình:', error);
+            }
+          } else {
+            console.warn('Screen Orientation API không được hỗ trợ trên trình duyệt này.');
+          }
+          }
+          lockOrientation()
+      }
+      ,[])
     return (
         <>
             <div className={cx('wrap')}>
-                <div className={cx('container')}>
+                    <div className={cx('container',{
+                        isDesktop : !isTabletOrMobile,
+                    })}>
                     <h2 className={cx('title',{
                         user_sellect : true,
                     })}>Đăng nhập

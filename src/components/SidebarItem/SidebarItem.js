@@ -5,10 +5,12 @@ import config from '~/config';
 import React from 'react';
 const cx = classNames.bind(styles);
 
-function SidebarItem(items) {
+function SidebarItem({isTabletOrMobile , items}) {
     return (
-        <div className={cx('wrapper')}>
-            {items.items.map((item, index) => {
+        <div className={cx('wrapper',{
+            isDesktop : !isTabletOrMobile,
+        })}>
+            {items.map((item, index) => {
                 return (
                     <Link
                         key={index}

@@ -7,13 +7,27 @@
 .container {
     width: 100%;
     position: absolute;
+    top: 40%;
     left: 50%;
-    top: 50%;
     transform: translate(-50%,-50%);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+.isDesktop{
+    width: 600px;
+    top: 50%;
     padding: 40px 60px;
     border: 3px dotted var(--primary);
     border-radius: 4px;
-    width: 600px;
+}
+.wrap .btn{
+    width: 300px;
+    margin: 8px auto;
+}
+.wrap .img{
+    // width: 300px;
+    // height: 300px;
 }
 .title {
     font-family: 'Pacifico';

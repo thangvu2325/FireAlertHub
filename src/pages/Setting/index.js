@@ -4,6 +4,8 @@ import Leaflet from '~/components/Leaflet';
 import Button from '~/components/Button';
 import { useState, useRef, useContext } from 'react';
 import { useSelector } from 'react-redux';
+import { useMediaQuery } from 'react-responsive';
+
 import { StateContext } from '~/App';
 const cx = classNames.bind(styles);
 
@@ -15,6 +17,8 @@ function Setting() {
     const [inputPassword, setInputPassword] = useState('*******');
     const [locate, setLocate] = useState(currentUser._doc.location);
     const { admin } = useContext(StateContext);
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    console.log(isTabletOrMobile)
 
     const handOpenMap = () => {
         setMapOpen(!mapOpen);
@@ -29,7 +33,9 @@ function Setting() {
                 <h1 className={cx('title')}>Setting</h1>
             </div>
             {admin ? null : (
-                <div className={cx('container')}>
+                <div className={cx('container',{
+                    isDesktop: !isTabletOrMobile,
+                })}>
                     <div className={cx('content')}> 
                         <div className={cx('action')}>
                                 <h4 className={cx('title')}>Email:</h4>
@@ -99,7 +105,9 @@ function Setting() {
     
                         </div>
                         <span className={cx('action-btn')}>
-
+                            <Button outline onClick={handOpenMap} className={cx('btn')}>
+                                    Map
+                            </Button>
                             <Button primary className={cx('btn')}>
                             Lưu
                             </Button>

@@ -4,7 +4,7 @@ import { useRef } from 'react';
 
 
 const cx = classNames.bind(styles);
-function DashboardTable({ data = {}, primary = false }) {
+function    DashboardTable({ data = {}, primary = false , tram = '' }) {
     const ref = useRef();
     const handleMap = (e) => {
         window.open(`https://www.google.com/maps/dir/?api=1&origin=current+location&destination=${e.target.innerText}`,'_blank');
@@ -13,7 +13,7 @@ function DashboardTable({ data = {}, primary = false }) {
     return (
        <div className={cx('wrap')}>
             <div className={cx('header')}>
-                {primary ?<h1 className={cx('',{primary})}>Cảnh báo những nơi xảy ra cháy.!</h1>: <h1> Danh sách các hộ sử dụng thiết bị báo cháy.!</h1>}
+                {primary ?<h1 className={cx('',{primary})}>Cảnh báo những nơi xảy ra cháy gần {tram}.!</h1>: <h1> Danh sách các hộ sử dụng thiết bị báo cháy gần {tram}.!</h1>}
             </div>
             <table className={cx('container')}>
                 <thead>

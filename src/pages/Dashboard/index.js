@@ -56,7 +56,6 @@ function Dashboard() {
             navigate("/login");
           }
           if (currentUser?.accessToken) {
-              console.log(1)
             getAllUsers(currentUser?.accessToken, dispatch, axiosJWT);
           }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,7 +71,7 @@ function Dashboard() {
             </div>
             <div className={cx('container')}>
                 {admin ? (
-                    <DashboardTable data={data[admin === 'adminA'? 'From_HCMUT':'From_UTE']} primary={false} />
+                    <DashboardTable tram = {admin === 'adminA'? 'Đại học Bách Khoa':'Đại học Sư Phạm Kỹ Thuật'} data={data[admin === 'adminA'? 'From_HCMUT':'From_UTE']} primary={false} />
                 ) : (
                     <>
                         {found && admin === '' ? '':<div className={cx('shadow')}>
@@ -112,7 +111,9 @@ function Dashboard() {
                             </div>
                         </div>
                         <div className={cx('line-chart')}>
-                            <LineChart dataValue={mq2Value} />
+                            <div className={cx('line-chart-content')}>
+                                <LineChart dataValue={mq2Value} />
+                            </div>
                         </div>
                     </>
                 )}

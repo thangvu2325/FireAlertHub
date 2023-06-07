@@ -9,18 +9,28 @@
     font-family: 'Pacifico';
     font-weight: 600;
     font-size: 4rem;
-    text-align: center;
     line-height: 1.4;
     color: var(--text-color);
-    text-align: left;
-    margin: 12px 24px;
+    text-align: center;
 }
 .container {
-    width: 500px;
-    margin-top: 150px;
     background-color: var(--white);
     border-radius: 4px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 280px;
+}
+.isDesktop{
+    width: 500px;
+    .title{
+      text-align: left;
+      margin: 12px 24px;
+    }
+   
 }
 .content {
     display: flex;
@@ -42,11 +52,12 @@
     border: 1px solid var(--text-color);
     border-radius: 4px;
 }
-.btn {
+.wrap .btn {
     margin: 8px 16px;
 }
 .detail {
     display: block;
+    text-align: center;
     margin: 24px 16px;
 }
 

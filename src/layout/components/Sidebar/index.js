@@ -8,7 +8,7 @@ import { StateContext } from '~/App';
 import { useContext } from 'react';
 import { IconAssembly, IconHome2, IconUser } from '@tabler/icons-react';
 const cx = classNames.bind(styles);
-function Sidebar() {
+function Sidebar({isTabletOrMobile}) {
     const { admin } = useContext(StateContext);
     const styleState = useContext(StateContext);
     const checked = styleState.sidebarWidth;
@@ -86,11 +86,12 @@ function Sidebar() {
         <aside
             className={cx('wrap', {
                 checked,
+                isDesktop : !isTabletOrMobile,
             })}
         >
             <div className={cx('container')}>
-                <SidebarHeader />
-                <SidebarItem items={admin ? MENU_Admin : MENU_ITEM} />
+                {isTabletOrMobile ? '' : <SidebarHeader />}
+                <SidebarItem isTabletOrMobile items={admin ? MENU_Admin : MENU_ITEM} />
             </div>
         </aside>
     );

@@ -2,15 +2,17 @@ import { useEffect, useState, memo } from 'react';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import { CategoryScale } from 'chart.js';
+import styles from './LineChart.module.scss';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles)
+
 Chart.register(CategoryScale);
 
 function LineChart(dataValue) {
     const [data, setData] = useState([]);
     // Counter state for new data points
     const [count, setCount] = useState(0);
-    useEffect(()=>{
-
-    })
 
     useEffect(() => {
         const formattedData = {
@@ -31,24 +33,26 @@ function LineChart(dataValue) {
     }, [dataValue.dataValue]);
 
     return (
-        <Line
-            data={{
-                labels: data.map((item) => item.x),
-                datasets: [
-                    {
-                        label: 'Khói',
-                        data: data.map((item) => item.y),
-                        fill: true,
-                        borderColor: '#5174D4',
+            <Line
+                data={{
+                    labels: data.map((item) => item.x),
+                    datasets: [
+                        {
+                            label: 'Khói',
+                            data: data.map((item) => item.y),
+                            fill: true,
+                            borderColor: '#5174D4',
+                        },
+                    ],
+                }}
+                className={cx('line-chart')}
+                options={{
+                    animation: {
+                        duration: 0, // tắt animation của biểu đồ
                     },
-                ],
-            }}
-            options={{
-                animation: {
-                    duration: 0, // tắt animation của biểu đồ
-                },
-            }}
-        />
+                }}
+                
+            />
     );
 }
 export default memo(LineChart);

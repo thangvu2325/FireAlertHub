@@ -1,4 +1,18 @@
-.wrap {
+:not(.isDesktop).wrap {
+    display: none;
+    background-color: var(--white);
+    position: absolute;
+    top: calc(var(--default-layout-header-height) + 4px);
+    left: 8px;
+    z-index: 12;
+    .checked{
+    display: block;
+    }
+}
+:not(.isDesktop).checked{
+    display: block;
+}
+.isDesktop{
     background-color: var(--white);
     width: var(--width-sidebar);
     min-width: var(--width-sidebar);
@@ -9,9 +23,9 @@
     border-bottom-right-radius: 4px;
     overflow: hidden;
 }
-.checked {
+.isDesktop.checked {
     width: 70px;
-    min-width: 70px
+    min-width: 70px;
 }
 .container {
     text-align: center;

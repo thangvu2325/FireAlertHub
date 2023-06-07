@@ -60,7 +60,7 @@ function ModalBox() {
                         <button className={cx('btn')} onClick={handleClose}>
                             <FontAwesomeIcon icon={faClose} />
                         </button>
-                        <DashboardTable primary data={warningData} />
+                        <DashboardTable tram = {admin === 'adminA'?'Đại học Bách Khoa':'Đại học Sư Phạm Kỹ Thuật'} primary data={warningData} />
                     </div>
                 </>
             ) : null}
