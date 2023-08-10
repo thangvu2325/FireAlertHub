@@ -1,9 +1,28 @@
 .leaflet-container {
-    width: 500px;
-    height: 500px;
+    height: 100%;
+    width: 100%;
 }
-
-
+.wrap {
+    height: 100%;
+    width: 100%;
+}
+.leaflet-geosearch .search-control {
+    width: 400px;
+    height: 100px;
+    font-size: 14px;
+    /* Thêm các thuộc tính CSS khác tùy chỉnh tùy ý */
+}
+.leaflet-top {
+    .glass {
+        font-size: 1.4rem;
+    }
+    .results {
+        font-size: 1.4rem;
+    }
+    .reset {
+        font-size: 1.4rem;
+    }
+}
 .close-button {
     position: absolute;
     top: 10px;
@@ -15,4 +34,12 @@
     cursor: pointer;
     z-index: 1000;
     color: black;
+}
+.newPopup {
+    font-size: 1.2rem;
+    h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
 }

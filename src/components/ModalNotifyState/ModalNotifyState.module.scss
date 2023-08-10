@@ -1,11 +1,16 @@
-.modal-custom{
+.modal-custom {
     top: 100px; /* Đặt khoảng cách từ đỉnh của trang */
     transform: translateY(0); /* Ghi đè giá trị mặc định của transform */
     background-color: var(--background-color);
 }
-.message{
+.message {
     color: #161823;
 }
-#modal-title{
+#modal-title {
     color: #161823;
+}
+.btn {
+    margin: 0 auto;
+    padding: 8px 16px;
+    font-size: 1.2rem;
 }

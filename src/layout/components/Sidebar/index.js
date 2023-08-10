@@ -3,15 +3,15 @@ import styles from './Sidebar.module.scss';
 
 import SidebarHeader from '~/components/SidebarHeader';
 import SidebarItem from '~/components/SidebarItem';
-import { BookIcon, DashboardIcon, ServiceIcon, SettingIcon } from '~/components/Icons';
-import { StateContext } from '~/App';
-import { useContext } from 'react';
+import { BookIcon, DashboardIcon, MapIcon, ServiceIcon, SettingIcon } from '~/components/Icons';
 import { IconAssembly, IconHome2, IconUser } from '@tabler/icons-react';
+import { useSelector } from 'react-redux';
+import { adminSelector, sidebarWidthSelector } from '~/redux/selectors';
 const cx = classNames.bind(styles);
-function Sidebar({isTabletOrMobile}) {
-    const { admin } = useContext(StateContext);
-    const styleState = useContext(StateContext);
-    const checked = styleState.sidebarWidth;
+function Sidebar({ isTabletOrMobile }) {
+    // const { admin } = useContext(StateContext);
+    const admin = useSelector(adminSelector);
+    const checked = useSelector(sidebarWidthSelector);
     const MENU_ITEM = [
         {
             icon: <IconHome2 className={cx('svg-inline')} />,
@@ -24,6 +24,12 @@ function Sidebar({isTabletOrMobile}) {
             title: 'Dashboard',
             to: 'dashboard',
             ref: 'dashboardLink',
+        },
+        {
+            icon: <ServiceIcon className={cx('svg-inline')} />,
+            title: 'Analysis',
+            to: 'analysis',
+            ref: 'analysisLink',
         },
         {
             icon: <BookIcon className={cx('svg-inline')} />,
@@ -65,9 +71,15 @@ function Sidebar({isTabletOrMobile}) {
         },
         {
             icon: <ServiceIcon className={cx('svg-inline')} />,
-            title: 'Analyst',
-            to: 'services',
-            ref: 'servicesLink',
+            title: 'Analysis',
+            to: 'analysis',
+            ref: 'analysisLink',
+        },
+        {
+            icon: <MapIcon className={cx('svg-inline')} />,
+            title: 'Map',
+            to: 'map',
+            ref: 'mapLink',
         },
         {
             icon: <SettingIcon className={cx('svg-inline')} />,
@@ -77,21 +89,21 @@ function Sidebar({isTabletOrMobile}) {
         },
         {
             icon: <IconUser className={cx('svg-inline')} />,
-            title: 'User',
-            to: 'services',
-            ref: 'securityLink',
+            title: 'UserManager',
+            to: 'usermanager',
+            ref: 'usermanagerLink',
         },
     ];
     return (
         <aside
             className={cx('wrap', {
                 checked,
-                isDesktop : !isTabletOrMobile,
+                isDesktop: !isTabletOrMobile,
             })}
         >
             <div className={cx('container')}>
                 {isTabletOrMobile ? '' : <SidebarHeader />}
-                <SidebarItem isTabletOrMobile items={admin ? MENU_Admin : MENU_ITEM} />
+                <SidebarItem isTabletOrMobile items={admin !== 'user' ? MENU_Admin : MENU_ITEM} />
             </div>
         </aside>
     );

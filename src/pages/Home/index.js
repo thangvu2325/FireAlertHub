@@ -6,28 +6,32 @@ import { useMediaQuery } from 'react-responsive';
 import Button from '~/components/Button';
 import { IconFlame } from '@tabler/icons-react';
 import { useSelector } from 'react-redux';
+import { currentUserSelector } from '~/redux/selectors';
 const cx = classNames.bind(styles);
 function Home() {
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
-    const currentUser = useSelector((state) => state.auth.login.currentUser)
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
+    const currentUser = useSelector(currentUserSelector);
     return (
         <div className={cx('wrap')}>
-            <div className={cx('container',{
-                isDesktop : !isTabletOrMobile,
-            })}>
-                {!currentUser?.accessToken && isTabletOrMobile ? 
-                (
+            <div
+                className={cx('container', {
+                    isDesktop: !isTabletOrMobile,
+                })}
+            >
+                {!currentUser?.accessToken && isTabletOrMobile ? (
                     <>
-                            <div className={cx('img')}>
-                                <IconFlame size = {400} stroke={0.8}/>
-                            </div>
-                            <Button className={cx('btn')} to={config.routes.login} primary>Đăng nhập</Button>
-                            <Button className={cx('btn')} to={config.routes.signup} outline>Đăng ký</Button>
+                        <div className={cx('img')}>
+                            <IconFlame size={400} stroke={0.8} />
+                        </div>
+                        <Button className={cx('btn')} to={config.routes.login} primary>
+                            Đăng nhập
+                        </Button>
+                        <Button className={cx('btn')} to={config.routes.signup} outline>
+                            Đăng ký
+                        </Button>
                     </>
-                )
-                 : 
-                (
-                     <>
+                ) : (
+                    <>
                         <h1 className={cx('title')}>Phòng cháy, Chữa cháy!</h1>
                         <div className={cx('menu-item')}>
                             <Link to={config.routes.home} className={cx('item')}>
@@ -43,10 +47,8 @@ function Home() {
                                 Contact
                             </Link>
                         </div>
-                     </>
-                )
-                }
-                
+                    </>
+                )}
             </div>
         </div>
     );

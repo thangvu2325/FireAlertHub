@@ -1,22 +1,22 @@
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './SwitchMode.module.scss';
 import classNames from 'classnames/bind';
-import { useContext, useRef } from 'react';
-import { StateContext } from '~/App';
+import { themeModeSelector } from '~/redux/selectors';
+import { useRef } from 'react';
+import { setThemeMode } from '~/redux/settingSlice';
 
 const cx = classNames.bind(styles);
-function SwitchMode({isTabletOrMobile}) {
+function SwitchMode({ isTabletOrMobile }) {
     // eslint-disable-next-line
-    const styleState = useContext(StateContext);
     const ref = useRef();
-    const setLocalStorage = (key, data) => {
-        window.localStorage.setItem(key, data);
-    };
-    setLocalStorage('setStyle', styleState.style);
+    const dispatch = useDispatch();
+
+    const themeMode = useSelector(themeModeSelector);
     const handleClick = () => {
-        styleState.setStyle(!styleState.style);
+        dispatch(setThemeMode(!themeMode));
     };
     let noHighlight = 'noHighlight';
-    if (styleState.style && ref.current) {
+    if (themeMode && ref.current) {
         ref.current.style.left = '10px';
     } else if (ref.current) {
         ref.current.style.left = '-10px';
@@ -38,7 +38,7 @@ function SwitchMode({isTabletOrMobile}) {
                     <div
                         className={cx({
                             noHighlight,
-                            light: styleState.style ? 'light' : '',
+                            light: themeMode ? 'light' : '',
                         })}
                     ></div>
                     <div

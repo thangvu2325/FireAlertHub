@@ -1,10 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useContext } from 'react';
 import { logOut } from '~/redux/apiRequest';
-import {useDispatch , useSelector} from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { logOutSuccess } from '~/redux/authSlice';
-import {createAxios} from '~/createInstance';
+import { createAxios } from '~/createInstance';
 import {
     faEllipsisVertical,
     faEarthAsia,
@@ -25,11 +24,14 @@ import { InboxIcon } from '~/components/Icons';
 import Image from '~/components/Image';
 import config from '~/config';
 import SwitchMode from '~/components/SwitchMode';
-import { StateContext } from '~/App';
-import ModalNotifyState from '~/components/ModalNotifyState'
+import ModalNotifyState from '~/components/ModalNotifyState';
 import { useState } from 'react';
+import { currentUserSelector, sidebarWidthSelector } from '~/redux/selectors';
+import { toast } from 'react-toastify';
+import { setSidebarWidth } from '~/redux/settingSlice';
+import { getInbox } from '~/api/managerRequest';
+import { useEffect } from 'react';
 const cx = classNames.bind(styles);
-
 
 const handleMenuChange = (menuItem) => {
     switch (menuItem.type) {
@@ -68,22 +70,24 @@ const MENU_ITEM = [
     },
 ];
 export var barClickChecked = false;
-function Header({isTabletOrMobile}) {
-    const styleState = useContext(StateContext);
-    const user = useSelector((state)=> state.auth.login.currentUser);
+function Header({ isTabletOrMobile }) {
+    const user = useSelector(currentUserSelector);
     const [showModalMessage, setShowModalMessage] = useState(false);
+    const sidebarWidth = useSelector(sidebarWidthSelector);
+    const [inboxs, setInboxs] = useState([]);
     const accessToken = user?.accessToken;
     const id = user?._doc?._id;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const axiosJWT = createAxios(user,dispatch,logOutSuccess);
-    const handleLogout = () =>{
-        logOut(dispatch,id,navigate, accessToken,axiosJWT);
-    }
-    const handleShowModalMessage = ()=>{
+
+    const axiosJWT = createAxios(user, dispatch, logOutSuccess, toast, navigate);
+    const handleLogout = () => {
+        logOut(dispatch, id, navigate, accessToken, axiosJWT);
+    };
+    const handleShowModalMessage = () => {
         setShowModalMessage(!showModalMessage);
-    }
-   
+    };
+
     const userMenu = [
         {
             icon: <FontAwesomeIcon icon={faGear} />,
@@ -97,37 +101,54 @@ function Header({isTabletOrMobile}) {
             to: config.routes.home,
             separate: false,
             handleLogout,
-        },  
+        },
     ];
 
+    useEffect(() => {
+        const fetchCallAPI = async () => {
+            try {
+                const data = await getInbox(id, accessToken, axiosJWT);
+                setInboxs(data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchCallAPI();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const handleClickBars = () => {
-        styleState.setSidebarWidth(!styleState.sidebarWidth);
+        dispatch(setSidebarWidth(!sidebarWidth));
     };
 
     return (
-        <header className={cx('wrapper',{
-            isDesktop : !isTabletOrMobile,
-        })}>
-            <ModalNotifyState showModalMessage = {showModalMessage}  setShowModalMessage= {setShowModalMessage}/>
+        <header
+            className={cx('wrapper', {
+                isDesktop: !isTabletOrMobile,
+            })}
+        >
+            <ModalNotifyState
+                inboxs={inboxs}
+                showModalMessage={showModalMessage}
+                setShowModalMessage={setShowModalMessage}
+            />
             <div className={cx('logo-link')}>
                 <FontAwesomeIcon icon={user?.accessToken ? faBars : faHome} onClick={handleClickBars} />
             </div>
             <div className={cx('actions')}>
-                {user?.accessToken  ? 
+                {user?.accessToken ? (
                     <>
-                        {isTabletOrMobile ? '': 
+                        {isTabletOrMobile ? (
+                            ''
+                        ) : (
                             <Tippy delay={[0, 50]} content="Inbox" placement="bottom">
-                                <button className={cx('action-btn')} 
-                                    onClick = {handleShowModalMessage} 
-                                >
+                                <button className={cx('action-btn')} onClick={handleShowModalMessage}>
                                     <InboxIcon />
-                                    <span className={cx('badge')}>12</span>
+                                    <span className={cx('badge')}>{inboxs.length}</span>
                                 </button>
                             </Tippy>
-                        }
-                        
+                        )}
                     </>
-                 : (
+                ) : (
                     <>
                         <Button to={config.routes.login} primary>
                             Log in
@@ -137,12 +158,12 @@ function Header({isTabletOrMobile}) {
                         </Button>
                     </>
                 )}
-                <SwitchMode isTabletOrMobile/>
+                <SwitchMode isTabletOrMobile />
                 <>
                     <Menu items={user?.accessToken ? userMenu : MENU_ITEM} onChange={handleMenuChange}>
                         {user?.accessToken ? (
                             <Image
-                                src="https://scontent.fsgn13-2.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?stp=cp0_dst-png_p40x40&_nc_cat=1&ccb=1-7&_nc_sid=7206a8&_nc_ohc=tmzyCxPT980AX_kYnDb&_nc_ht=scontent.fsgn13-2.fna&oh=00_AfDcOwMLkWR0MWkqPLqUaQ8eMQvAhNa0BLUcaqo6lSY5AA&oe=64965B38"
+                                src="https://scontent.fsgn2-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?stp=cp0_dst-png_p60x60&_nc_cat=1&cb=99be929b-3346023f&ccb=1-7&_nc_sid=7206a8&_nc_ohc=go7e2rSOKFwAX-DeyaZ&_nc_ht=scontent.fsgn2-5.fna&oh=00_AfDZCky0cVvXwZpxG8o6ROgBNQffv9ef7zRCyFOIUwCIew&oe=64F11A78"
                                 className={cx('user-avatar')}
                                 alt="Nguyen Van A"
                                 fallBack="https://scontent.fsgn2-8.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?stp=cp0_dst-png_p60x60&_nc_cat=1&ccb=1-7&_nc_sid=7206a8&_nc_ohc=E70viSc53w0AX8GYSY7&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfD2dw7Et-gbPGBMYZTT12RlM223MEMvX0QErMevYJpl6w&oe=63FE15F8"
@@ -154,7 +175,6 @@ function Header({isTabletOrMobile}) {
                         )}
                     </Menu>
                 </>
-
             </div>
         </header>
     );

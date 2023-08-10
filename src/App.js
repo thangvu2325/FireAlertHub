@@ -1,40 +1,48 @@
-import { Fragment, useState } from 'react';
+import { Fragment, createContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { privateRoutes, publicRoutes } from '~/routes';
 import { DefaultLayout } from '~/layout';
-import { createContext } from 'react';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-// import { useMediaQuery } from 'react-responsive';
-import MessengerCustomerChat from 'react-messenger-customer-chat';
-
+import { useDispatch, useSelector } from 'react-redux';
+// import MessengerCustomerChat from 'react-messenger-customer-chat';
+import { currentUserSelector, themeModeSelector } from './redux/selectors';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { setNodesValue } from './redux/nodesSlice';
 export const StateContext = createContext();
-
+const WS_URL = 'ws://localhost:5000/';
 function App() {
-    const currentUser = useSelector((state) => state.auth.login.currentUser)
-    const [style, setStyle] = useState(false);
-    const [sidebarWidth, setSidebarWidth] = useState(false);
-    const [admin, setAdmin] = useState('');
- 
-    // const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
-    // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
-    // const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
-    // const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
-    // setInterval(()=>{console.log(`isTabletOrMobile:${isTabletOrMobile}`)},1000)
-    // const location = useLocation();
-    useEffect(() => {
-        if (currentUser) {
-            if (currentUser?._doc.roles[0].name === 'adminA') {
-                setAdmin('adminA');
-            } else if (currentUser?._doc.roles[0].name === 'adminB') {
-                setAdmin('adminB');
+    const currentUser = useSelector(currentUserSelector);
+    const dispatch = useDispatch();
+    const userId = currentUser?._doc._id;
+
+    const [requestCallAPI, setRequestCallAPI] = useState(false);
+    const { sendJsonMessage, readyState } = useWebSocket(WS_URL, {
+        onOpen: () => {
+            console.log('WebSocket connection established.');
+        },
+        onMessage: (message) => {
+            if (currentUser._doc.roles[0].name !== 'user') {
+                setRequestCallAPI(true);
             } else {
-                setAdmin('');
+                setRequestCallAPI(true);
+                dispatch(setNodesValue(JSON.parse(message.data)));
             }
+        },
+        share: true,
+        filter: () => false,
+        retryOnError: true,
+        shouldReconnect: () => true,
+    });
+
+    useEffect(() => {
+        if (currentUser && readyState === ReadyState.OPEN) {
+            sendJsonMessage({
+                userId,
+                type: 'iduser',
+            });
         }
-        // eslint-disable-next-line
-    }, [currentUser]);
-    if (style === true) {
+    }, [sendJsonMessage, readyState, currentUser, userId]);
+    const themeMode = useSelector(themeModeSelector);
+    if (themeMode === true) {
         document.documentElement.style.setProperty('--background-color', '#060714');
         document.documentElement.style.setProperty('--text-color', '#FBFBFB');
         document.documentElement.style.setProperty('--white', '#0C0C1E');
@@ -44,23 +52,12 @@ function App() {
         document.documentElement.style.setProperty('--white', '#f9f9f9');
     }
     return (
-        <StateContext.Provider
-            value={{
-                style,
-                setStyle,
-                sidebarWidth,
-                setSidebarWidth,
-                admin,
-            }}
-        >
+        <StateContext.Provider value={{ requestCallAPI, setRequestCallAPI }}>
             <Router>
                 <div className="App">
-                    <MessengerCustomerChat
-                        pageId="118879814536428"
-                        appId="930949868024444"
-                    />
+                    {/* <MessengerCustomerChat pageId="118879814536428" appId="930949868024444" /> */}
                     <Routes>
-                        <>  
+                        <>
                             {currentUser?.accessToken
                                 ? privateRoutes.map((route, index) => {
                                       const Page = route.component;
@@ -70,7 +67,7 @@ function App() {
                                       } else if (route.layout === null) {
                                           Layout = Fragment;
                                       }
-    
+
                                       return (
                                           <Route
                                               key={index}
@@ -86,13 +83,13 @@ function App() {
                                 : publicRoutes.map((route, index) => {
                                       const Page = route.component;
                                       let Layout = DefaultLayout;
-    
+
                                       if (route.layout) {
                                           Layout = route.layout;
                                       } else if (route.layout === null) {
                                           Layout = Fragment;
                                       }
-    
+
                                       return (
                                           <Route
                                               key={index}

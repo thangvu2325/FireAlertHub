@@ -21,16 +21,15 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     width: 280px;
 }
-.isDesktop{
+.isDesktop {
     width: 500px;
-    .title{
-      text-align: left;
-      margin: 12px 24px;
+    .title {
+        text-align: left;
+        margin: 12px 24px;
     }
-   
 }
 .content {
     display: flex;
@@ -63,11 +62,15 @@
 
 .map {
     position: absolute;
+    top: 50%;
+    width: 500px;
+    height: 500px;
+    transform: translate(-50%, -50%);
 }
-.user_sellect{
+.user_sellect {
     user-select: none;
 }
-.error-message{
+.error-message {
     font-size: 1rem;
     color: var(--primary);
     text-align: left;

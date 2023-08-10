@@ -1,120 +1,253 @@
 import classNames from 'classnames/bind';
 import styles from './Dashboard.module.scss';
 import RoundChart from '~/components/RoundChart';
-import { useState } from 'react';
-import { useContext } from 'react';
 import LineChart from '~/components/LineChart';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import Form from 'react-bootstrap/Form';
+import Table from 'react-bootstrap/Table';
 import DashboardTable from '~/components/DashboardTable';
-import { StateContext } from '~/App';
-import { onValue, ref } from 'firebase/database';
-import { database } from '~/firebase_setup/firebase';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAllUsers } from '~/redux/apiRequest';
-import { loginSuccess } from '~/redux/authSlice';
+import { IconPlugConnectedX } from '@tabler/icons-react';
+import { adminSelector, currentUserSelector, nodesSelector } from '~/redux/selectors';
 import { createAxios } from '~/createInstance';
-import {  IconPlugConnectedX } from '@tabler/icons-react';
+import { refreshToken as refreshTokenAction } from '~/redux/authSlice';
+import { useEffect, memo, useState } from 'react';
+import { getalluserinUserManager, sendConnectToDevice } from '~/api/managerRequest';
+import { useContext } from 'react';
+import { StateContext } from '~/App';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import Button from '~/components/Button';
+import { fetchNodesData } from '~/redux/nodesSlice';
+
 const cx = classNames.bind(styles);
 
 function Dashboard() {
-    const navigate = useNavigate();
+    const [lineChartData, setLineChartData] = useState();
+    const [callAPI, setCallAPI] = useState(false);
+    const nodesData = useSelector(nodesSelector);
+    const [activeKey, setActiveKey] = useState(nodesData?.length && nodesData[0]?.node_name);
+    const [formSelect, setFormSelect] = useState('Default');
+    const { requestCallAPI, setRequestCallAPI } = useContext(StateContext);
+    const found = true;
+    // const dashboard = useSelector(dashboardValue);
+    const [dashboard, setDashboard] = useState([]);
+    const admin = useSelector(adminSelector);
+    const currentUser = useSelector(currentUserSelector);
+    const accessToken = currentUser.accessToken;
+    const userID = currentUser._doc._id;
     const dispatch = useDispatch();
-    const [mq2Value, setMq2Value] = useState('');
-    const [fireValue, setFireValue] = useState('');
-    const [found, setFound] = useState('');
-    const [data, setData] = useState([]);
-    const {admin } = useContext(StateContext);
-    const currentUser = useSelector((state)=> state.auth.login.currentUser)
-    console.log(found)
-    // const userList = useSelector((state) => state.users.users?.allUsers);
-    let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
-    useEffect(()=>{
-            onValue(ref(database), (snapshot) => {
-                var data = snapshot.val();
-                setData(data);
-            });
-            onValue(ref(database,`From_HCMUT/${currentUser._doc.inform}`),(snapshot)=>{
-                if(snapshot.exists()){
-                    setMq2Value(snapshot.val().Smoke_value);
-                    setFireValue(snapshot.val().Fire_value);
-                    setFound(true);
-                }
-            } )
-            onValue(ref(database,`From_UTE/${currentUser._doc.inform}`),(snapshot)=>{
-                if(snapshot.exists()){
-                    setMq2Value(snapshot.val().Smoke_value);
-                    setFireValue(snapshot.val().Fire_value);
-                    setFound(true);
-                }
-            } )
-           
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
-    useEffect(()=>{
-        if (!currentUser) {
-            navigate("/login");
-          }
-          if (currentUser?.accessToken) {
-            getAllUsers(currentUser?.accessToken, dispatch, axiosJWT);
-          }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+    const navigate = useNavigate();
+    const axiosJWT = createAxios(currentUser, dispatch, refreshTokenAction, toast, navigate);
+    async function fetchDataManager() {
+        try {
+            const data = await getalluserinUserManager(userID, accessToken, axiosJWT);
+            setDashboard(data);
+        } catch (error) {
+            // Xử lý lỗi ở đây
+            console.log(error);
+        }
+    }
 
+    const nodeSelect = nodesData?.filter((e) => e?.node_name === activeKey)[0];
+    const handleSendConnectToDevice = async () => {
+        try {
+            await sendConnectToDevice(userID, accessToken, axiosJWT);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const handleSelectTab = (k) => {
+        setActiveKey(k);
+    };
+    const handleChangeFormSelect = (e) => {
+        setFormSelect(e.target.value);
+    };
+    useEffect(() => {
+        dispatch(fetchNodesData(userID, accessToken));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    useEffect(() => {
+        if (callAPI) {
+            if (admin !== 'user') {
+                fetchDataManager();
+            } else {
+                // fetchData();
+            }
+        }
+        setCallAPI(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nodesData, callAPI]);
+    useEffect(() => {
+        if (admin !== 'user') {
+            fetchDataManager();
+        } else {
+            // fetchData();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [admin]);
+    useEffect(() => {
+        if (requestCallAPI) {
+            setCallAPI(true);
+        }
+        setRequestCallAPI(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [requestCallAPI]);
     return (
-            <div className={cx('wrap',{
-                backgroundShadow: !found
-                })}
-            >
+        <div
+            className={cx('wrap', {
+                backgroundShadow: !found,
+            })}
+        >
             <div className={cx('heading')}>
                 <h1 className={cx('title')}>Dashboard</h1>
+                {admin === 'user' ? (
+                    <Button primary className={cx('btn-connect')} onClick={handleSendConnectToDevice}>
+                        Connect
+                    </Button>
+                ) : (
+                    ''
+                )}
             </div>
             <div className={cx('container')}>
-                {admin ? (
-                    <DashboardTable tram = {admin === 'adminA'? 'Đại học Bách Khoa':'Đại học Sư Phạm Kỹ Thuật'} data={data[admin === 'adminA'? 'From_HCMUT':'From_UTE']} primary={false} />
+                {admin !== 'user' ? (
+                    <DashboardTable
+                        tram={admin === 'HCMUT_STATION' ? 'Đại học Bách Khoa' : 'Đại học Sư Phạm Kỹ Thuật'}
+                        data={dashboard}
+                        primary={false}
+                    />
                 ) : (
                     <>
-                        {found && admin === '' ? '':<div className={cx('shadow')}>
-                        <IconPlugConnectedX  
-                            size="400"
-                            stroke="0.7"
-                            className={cx('plug-icon')}
-                        />
+                        {found && admin === 'user' ? (
+                            ''
+                        ) : (
+                            <div className={cx('shadow')}>
+                                <IconPlugConnectedX size="400" stroke="0.7" className={cx('plug-icon')} />
+                            </div>
+                        )}
+                        <div className={cx('top')}>
+                            {nodesData?.length && formSelect === 'Default' ? (
+                                <div className={cx('wrap-tab')}>
+                                    <Tabs
+                                        defaultActiveKey={nodesData[0].node_name}
+                                        id="fill-tab-example"
+                                        className="mb-5 ml-3"
+                                        fill
+                                        onSelect={handleSelectTab}
+                                    >
+                                        {nodesData?.map((node, index) => {
+                                            return (
+                                                <Tab eventKey={node.node_name} title={node.node_name} key={index}>
+                                                    <h4 className={cx('tab-text')}>Tab content for {node.node_name}</h4>
+                                                </Tab>
+                                            );
+                                        })}
+                                    </Tabs>
+                                </div>
+                            ) : (
+                                ''
+                            )}
+                            <Form.Select
+                                size="lg"
+                                className={cx('top-form-sellect')}
+                                value={formSelect}
+                                onChange={handleChangeFormSelect}
+                            >
+                                <option value="Default">Default</option>
+                                <option value="Table">Table</option>
+                            </Form.Select>
                         </div>
-                        }
+                        {formSelect === 'Table' ? (
+                            <div className={cx('content-title')}>
+                                <h2>Content for Table</h2>
+                            </div>
+                        ) : (
+                            ''
+                        )}
                         <div className={cx('content-wrapper')}>
-                            <div className={cx('cell')}>
-                                <span className={cx('parameter')}>
-                                    <RoundChart
-                                        value={{
-                                            value: mq2Value,
-                                            maxValue: 7000,
-                                        }}
-                                    />
-                                </span>
-                                <span className={cx('cell-title')}>
-                                    <h2>Phát hiện khói</h2>
-                                </span>
-                            </div>
-                            <div className={cx('cell')}>
-                                <span className={cx('parameter')}>
-                                    <RoundChart
-                                        value={{
-                                            value: fireValue,
-                                            maxValue: 1,
-                                        }}
-                                    />
-                                </span>
-                                <span className={cx('cell-title')}>
-                                    <h2>Phát hiện lửa</h2>
-                                </span>
-                            </div>
+                            {formSelect === 'Default' ? (
+                                <>
+                                    <div className={cx('cell')}>
+                                        <span className={cx('parameter')}>
+                                            <RoundChart
+                                                value={{
+                                                    value:
+                                                        nodeSelect?.Gas_value[nodeSelect.Gas_value?.length - 1]?.y ?? 0,
+                                                    maxValue: 7000,
+                                                }}
+                                            />
+                                        </span>
+                                        <span className={cx('cell-title')}>
+                                            <h2>Phát hiện gas</h2>
+                                        </span>
+                                    </div>
+                                    <div className={cx('cell')}>
+                                        <span className={cx('parameter')}>
+                                            <RoundChart
+                                                value={{
+                                                    value:
+                                                        nodeSelect?.Smoke_value[nodeSelect?.Smoke_value?.length - 1]
+                                                            ?.y ?? 0,
+                                                    maxValue: 7000,
+                                                }}
+                                            />
+                                        </span>
+                                        <span className={cx('cell-title')}>
+                                            <h2>Phát hiện khói</h2>
+                                        </span>
+                                    </div>
+                                    <div className={cx('cell')}>
+                                        <span className={cx('parameter')}>
+                                            <RoundChart
+                                                value={{
+                                                    value:
+                                                        nodeSelect?.Fire_value[nodeSelect?.Fire_value?.length - 1]?.y ??
+                                                        0,
+                                                    maxValue: 1,
+                                                }}
+                                            />
+                                        </span>
+                                        <span className={cx('cell-title')}>
+                                            <h2>Phát hiện lửa</h2>
+                                        </span>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <Table striped bordered hover variant="dark" className={cx('form-table')}>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Gas Value</th>
+                                                <th>Fire Value</th>
+                                                <th>Smoke Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {nodesData.map((node) => {
+                                                return (
+                                                    <tr key={node.node_name}>
+                                                        <td>{node.node_name}</td>
+                                                        <td>{node.Gas_value[node.Gas_value?.length - 1]?.y ?? 0}</td>
+                                                        <td>{node.Fire_value[node.Fire_value?.length - 1]?.y ?? 0}</td>
+                                                        <td>
+                                                            {node.Smoke_value[node.Smoke_value?.length - 1]?.y ?? 0}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </Table>
+                                </>
+                            )}
                         </div>
-                        <div className={cx('line-chart')}>
+
+                        {/* <div className={cx('line-chart')}>
                             <div className={cx('line-chart-content')}>
-                                <LineChart dataValue={mq2Value} />
+                                <LineChart dataValue={lineChartData} />
                             </div>
-                        </div>
+                        </div> */}
                     </>
                 )}
             </div>
@@ -122,4 +255,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default memo(Dashboard);

@@ -1,58 +1,60 @@
 import classNames from 'classnames/bind';
 import DashboardTable from '../DashboardTable';
 import styles from './ModalBox.module.scss';
-import { StateContext } from '~/App';
-import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
-import { useState,useEffect } from 'react';
-import { onValue, ref } from 'firebase/database';
-import { database } from '~/firebase_setup/firebase';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { adminSelector, currentUserSelector, warningSelector } from '~/redux/selectors';
+import { setOpenStatus, setWarning } from '~/redux/modalboxSlice';
+import { getAllUserWarninginUserManager } from '~/api/managerRequest';
+import { refreshToken as refreshTokenAction } from '~/redux/authSlice';
+import { createAxios } from '~/createInstance';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const cx = classNames.bind(styles);
 function ModalBox() {
-    const { admin } = useContext(StateContext);
+    const admin = useSelector(adminSelector);
     const [open, setOpen] = useState(false);
-    const [warningData, setWarningData] = useState({});
-    const [data,setData] = useState([]);
-    const obj = {};
-    useEffect(()=>{
-        onValue(ref(database), (snapshot) => {
-            var dataFirebase = snapshot.val();
-            setData(dataFirebase);
-        });
-    },[])
-    
+    const [warningData, setWarningData] = useState([]);
+    const warning = useSelector(warningSelector);
+    console.log(open);
+    const dispatch = useDispatch();
     useEffect(() => {
-        if(admin){
-            if (!!data[admin === 'adminA'?'From_HCMUT': 'From_UTE']) {
-                for (const key in data[admin === 'adminA'?'From_HCMUT':'From_UTE']) {
-                    const value = data[admin === 'adminA'?'From_HCMUT':'From_UTE'][key];
-                    console.log(value)
-                    if (value.Warning) {
-                        obj[key] = value;
-                    }
-                    else if(obj[key]){
-                        delete obj[key];
-                    }
-                }
-                if (Object.keys(obj).length !== 0) {
-                    setWarningData({ ...obj });
-                    setOpen(true);
-                }
-            }
-
+        if (warning) {
+            setOpen(true);
+            dispatch(setOpenStatus(true));
+        } else {
+            setOpen(false);
+            dispatch(setOpenStatus(false));
         }
-   
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
-    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [warning]);
+    const currentUser = useSelector(currentUserSelector);
+    const accessToken = currentUser.accessToken;
+    const userID = currentUser._doc._id;
+    const navigate = useNavigate();
+    const axiosJWT = createAxios(currentUser, dispatch, refreshTokenAction, toast, navigate);
+    useEffect(() => {
+        const fetchCallAPI = async () => {
+            try {
+                const data = await getAllUserWarninginUserManager(userID, accessToken, axiosJWT);
+                setWarningData(data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchCallAPI();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const handleClose = () => {
         setOpen(false);
-        setWarningData([]);
+        dispatch(setOpenStatus(false));
+        dispatch(setWarning(false));
     };
     return (
         <>
-            {warningData.length !== 0 && open  ? (
+            {open ? (
                 <>
                     <div className={cx('shadow')}></div>
 
@@ -60,7 +62,11 @@ function ModalBox() {
                         <button className={cx('btn')} onClick={handleClose}>
                             <FontAwesomeIcon icon={faClose} />
                         </button>
-                        <DashboardTable tram = {admin === 'adminA'?'Đại học Bách Khoa':'Đại học Sư Phạm Kỹ Thuật'} primary data={warningData} />
+                        <DashboardTable
+                            tram={admin === 'HCMUT_STATION' ? 'Đại học Bách Khoa' : 'Đại học Sư Phạm Kỹ Thuật'}
+                            primary
+                            data={warningData}
+                        />
                     </div>
                 </>
             ) : null}

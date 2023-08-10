@@ -8,9 +8,7 @@ import Leaflet from '~/components/Leaflet';
 import { useMediaQuery } from 'react-responsive';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '~/redux/apiRequest';
-import { set, ref } from 'firebase/database';
-import { database } from '~/firebase_setup/firebase';
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const cx = classNames.bind(styles);
 function Signup() {
@@ -21,145 +19,110 @@ function Signup() {
     const [password2, setPassword2] = useState('');
     const [phoneNumber, setPhone] = useState('');
     const [locate, setLocate] = useState('');
-    const [inform, setInform] = useState('');
+    const [gateway, setGateway] = useState('');
     const [openMap, setOpenMap] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [password2Error, setPassword2Error] = useState('');
     const [phoneError, setPhoneError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [locationError, setLocationError] = useState('');
-    const [informError, setInformError] = useState('');
-    // Firebase
-    function writeUserData(locate, uid, confirm) {
-        set(ref(database, `User_using/${confirm}`), {
-            locate,
-            email,
-        });
-    }
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
-    const handleRotateScreen = async () => {
-        if ('screen' in window && 'orientation' in window.screen) {
-          const currentOrientation = window.screen.orientation.type;
-      
-          try {
-            if (currentOrientation.startsWith('portrait-')) {
-              await window.screen.orientation.lock('landscape');
-            } else {
-              await window.screen.orientation.lock('portrait');
-            }
-          } catch (error) {
-            console.error('Không thể xoay màn hình:', error);
-          }
-        } else {
-          console.warn('Screen Orientation API không được hỗ trợ trên trình duyệt này.');
+    const [gatewayError, setGatewayError] = useState('');
+
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
+    const handleClick = () => {
+        handleMap();
+    };
+    const isRequired = (textCheck) => {
+        if (textCheck === '') {
+            return 'Trường này là bắt buộc!!';
         }
-      };
-    const handleClick = ()=>{
-        handleRotateScreen();
-        handleMap()
-    }
-    const isRequired = (textCheck)=>{
-        if(textCheck === ''){
-            return 'Trường này là bắt buộc!!'
-        }
-      }
+    };
 
     const handlePasswordChange = () => {
-        if(isRequired(password)){
+        if (isRequired(password)) {
             setPasswordError(isRequired(password));
-        }
-        else if (password.length < 8) {
-          setPasswordError('Mật khẩu phải có ít nhất 8 ký tự');
+        } else if (password.length < 8) {
+            setPasswordError('Mật khẩu phải có ít nhất 8 ký tự');
         } else {
-          setPasswordError('');
+            setPasswordError('');
         }
-      };
-      const handlePassword2Check = () => {
-        if(isRequired(password2)){
+    };
+    const handlePassword2Check = () => {
+        if (isRequired(password2)) {
             setPassword2Error(isRequired(password2));
-        }
-        else if(password2.length < 8){
+        } else if (password2.length < 8) {
             setPassword2Error('Mật khẩu nhập lại phải có ít nhất 8 ký tự');
-        }
-        else if (password !== password2) {
+        } else if (password !== password2) {
             setPassword2Error('Nhập lại mật khẩu không chính xác!');
         } else {
             setPassword2Error('');
         }
-      };
-      const handleLocationCheck = () => {
-        if(isRequired(locate)){
+    };
+    const handleLocationCheck = () => {
+        if (isRequired(locate)) {
             setLocationError(isRequired(locate));
-        }
-        else {
+        } else {
             setLocationError('');
         }
-      };
-     
-      const handlePhoneChange = (e) => {
-        if(isRequired(phoneNumber)){
+    };
+
+    const handlePhoneChange = (e) => {
+        if (isRequired(phoneNumber)) {
             setPhoneError(isRequired(phoneNumber));
-        }
-        else
-        if (!/^[0-9]{10}$/.test(phoneNumber)) {
-          setPhoneError('Số điện thoại không hợp lệ');
+        } else if (!/^[0-9]{10}$/.test(phoneNumber)) {
+            setPhoneError('Số điện thoại không hợp lệ');
         } else {
-          setPhoneError('');
+            setPhoneError('');
         }
-      };
-      const handleEmailChange = () => {
-        if(isRequired(email)){
+    };
+    const handleEmailChange = () => {
+        if (isRequired(email)) {
             setEmailError(isRequired(email));
-        }
-        else
-        if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-          setEmailError('Email không hợp lệ');
+        } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+            setEmailError('Email không hợp lệ');
         } else {
-          setEmailError('');
+            setEmailError('');
         }
-      };
-      const handleInformChange = () => {
-        if(isRequired(inform)){
-            setInformError(isRequired(inform));
+    };
+    const handleGatewayChange = () => {
+        if (isRequired(gateway)) {
+            setGatewayError(isRequired(gateway));
+        } else {
+            setGatewayError('');
         }
-        else {
-            setInformError('');
-        }
-      };
+    };
     const callbackFunction = (childData) => {
         setLocate(childData);
     };
-    const handleRegister= (email,password,phoneNumber,locate,inform)=>{
+    const handleRegister = (email, password, phoneNumber, locate, gateway) => {
         const newUser = {
-          email: email,
-          password:password,
-          phone:phoneNumber,
-          location: locate,
-          inform: inform
+            email: email,
+            password: password,
+            phone: phoneNumber,
+            location: locate,
+            gateway: gateway,
         };
-        
-        if(registerUser(newUser,dispatch,navigate,toast)){
+
+        if (registerUser(newUser, dispatch, navigate, toast)) {
             setEmail('');
             setPassword('');
             setPassword2('');
             setPhone('');
             setLocate('');
-            setInform('');
-            writeUserData(locate,email,inform)
+            setGateway('');
         }
-
-      }
+    };
     const handleSignup = () => {
         handlePasswordChange();
         handlePassword2Check();
         handleLocationCheck();
         handlePhoneChange();
         handleEmailChange();
-        handleInformChange();
-        if (passwordError ||password2Error ||phoneError||emailError||locationError||informError ) {
+        handleGatewayChange();
+        if (passwordError || password2Error || phoneError || emailError || locationError || gatewayError) {
             return;
         } else {
-             handleRegister(email, password, phoneNumber, locate, inform);
+            handleRegister(email, password, phoneNumber, locate, gateway);
         }
     };
     const handleMap = () => {
@@ -168,12 +131,18 @@ function Signup() {
     return (
         <>
             <div className={cx('wrap')}>
-                    <div className={cx('container',{
-                        isDesktop : !isTabletOrMobile,
-                    })}>
-                    <h2 className={cx('title',{
-                        user_sellect : true,
-                    })}>Sign Up</h2>
+                <div
+                    className={cx('container', {
+                        isDesktop: !isTabletOrMobile,
+                    })}
+                >
+                    <h2
+                        className={cx('title', {
+                            user_sellect: true,
+                        })}
+                    >
+                        Sign Up
+                    </h2>
                     <div className={cx('content')}>
                         <div className={cx('form')}>
                             <input
@@ -186,7 +155,7 @@ function Signup() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 onBlur={handleEmailChange}
                             />
-                            {emailError ?  <p className={cx('error-message')}>{emailError}</p>: '' }
+                            {emailError ? <p className={cx('error-message')}>{emailError}</p> : ''}
 
                             <input
                                 className={cx('input')}
@@ -198,8 +167,8 @@ function Signup() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 onBlur={handlePasswordChange}
                             />
-                            {passwordError ?  <p className={cx('error-message')}>{passwordError}</p>: '' }
-                           
+                            {passwordError ? <p className={cx('error-message')}>{passwordError}</p> : ''}
+
                             <input
                                 className={cx('input')}
                                 type="password"
@@ -210,7 +179,7 @@ function Signup() {
                                 onChange={(e) => setPassword2(e.target.value)}
                                 onBlur={handlePassword2Check}
                             />
-                            {password2Error ?  <p className={cx('error-message')}>{password2Error}</p>: '' }
+                            {password2Error ? <p className={cx('error-message')}>{password2Error}</p> : ''}
 
                             <input
                                 className={cx('input')}
@@ -222,8 +191,8 @@ function Signup() {
                                 onChange={(e) => setPhone(e.target.value)}
                                 onBlur={handlePhoneChange}
                             />
-                            {phoneError ?  <p className={cx('error-message')}>{phoneError}</p>: '' }
-                    
+                            {phoneError ? <p className={cx('error-message')}>{phoneError}</p> : ''}
+
                             <input
                                 className={cx('input')}
                                 type="text"
@@ -234,18 +203,18 @@ function Signup() {
                                 onChange={(e) => setLocate(e.target.value)}
                                 disabled
                             />
-                            {locationError ?  <p className={cx('error-message')}>{locationError}</p>: '' }
+                            {locationError ? <p className={cx('error-message')}>{locationError}</p> : ''}
                             <input
                                 className={cx('input')}
                                 type="text"
                                 name="confirm"
-                                value={inform}
+                                value={gateway}
                                 placeholder="nhập thông tin thiết bị"
                                 required
-                                onChange={(e) => setInform(e.target.value)}
-                                onBlur={handleInformChange}
+                                onChange={(e) => setGateway(e.target.value)}
+                                onBlur={handleGatewayChange}
                             />
-                            {informError ?  <p className={cx('error-message')}>{informError}</p>: '' }
+                            {gatewayError ? <p className={cx('error-message')}>{gatewayError}</p> : ''}
 
                             <Button className={cx('btn')} onClick={handleSignup} primary>
                                 Submit
@@ -255,16 +224,23 @@ function Signup() {
                             </Button>
                         </div>
                         <div className={cx('detail')}>
-                           <span className={cx('',{
-                        user_sellect : true,
-                        })}> already registered?{' '}</span>
+                            <span
+                                className={cx('', {
+                                    user_sellect: true,
+                                })}
+                            >
+                                {' '}
+                                already registered?{' '}
+                            </span>
                             <Button small primary to="/login">
                                 Login
                             </Button>
                         </div>
-                        <div className={cx('map')}>
-                            {openMap ? <Leaflet parentCallback={callbackFunction} onClose={handleMap} /> : null}
-                        </div>
+                        {openMap ? (
+                            <div className={cx('map')}>
+                                <Leaflet parentCallback={callbackFunction} onClose={handleMap} />
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             </div>

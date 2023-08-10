@@ -1,110 +1,142 @@
-import { Marker, MapContainer, TileLayer, useMap, useMapEvents, Popup } from 'react-leaflet';
-import { useEffect, useState } from 'react';
+import { Marker, MapContainer, TileLayer, useMapEvents, Popup } from 'react-leaflet';
+import { useState } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import L from 'leaflet';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
-import { IconSquareX } from '@tabler/icons-react';
+import 'leaflet-fullscreen/dist/Leaflet.fullscreen.js';
+import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';
+// import { IconSquareX } from '@tabler/icons-react';
 import './Leaflet.scss';
+import { iconDefault } from './icon';
+import SearchControl from './SearchControl';
+import { FireStationMarkers, UserMarkers } from './Markers';
+import Location from './Location';
+import { useEffect } from 'react';
+import { getLocationofAllUser } from '~/api/managerRequest';
+import { IconSquareX } from '@tabler/icons-react';
 
-function Leaflet({ locate = "9.785439, 105.624398", onClose, ...props }) {
-    const [initialPosition, setInitialPosition] = useState([]);
-    const [position, setPosition] = useState(locate.split(','));
+// const userList = [
+//     {
+//         location: {
+//             lat: 10.786771317571421,
+//             lng: 106.61557674407959,
+//         },
+//         email: 'thangvu2325@gmail.com',
+//         phone: '0395177093',
+//         device: 'User_10',
+//         userId: '334332',
+//         sensor: {
+//             smoke: 3,
+//             gas: 3,
+//             fire: 0,
+//             warning: 0,
+//         },
+//     },
+// ];
+function Leaflet({ locate = '9.785439, 105.624398', onClose, ...props }) {
+    const [data, setData] = useState({});
+    const [position, setPosition] = useState(null);
     const [selectedResult, setSelectedResult] = useState(null);
     const zoom = 17;
-    console.log(locate);
-    const iconDefault = new L.Icon({
-        iconUrl: icon,
-        shadowUrl: iconShadow,
-        iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
-        shadowAnchor: [12, 41], // the same for the shadow
-        popupAnchor: [0, -41], // point from which the popup should open relative to the iconAnchor
-    });
-
-    const sendData = (string) => {
-        props.parentCallback(string);
-    };
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setInitialPosition([latitude, longitude]);
-        });
-    }, []);
-
     const provider = new OpenStreetMapProvider();
 
-    const SearchControl = (props) => {
-        const map = useMap();
-
-        useEffect(() => {
-            const searchControl = new GeoSearchControl({
-                provider: props.provider,
-                style: 'bar',
-                marker: {
-                    icon: iconDefault,
-                },
-                ...props,
-            });
-
-            map.addControl(searchControl);
-            return () => map.removeControl(searchControl);
-            // eslint-disable-next-line
-        }, [props]);
-
-        return null;
+    const sendData = (string) => {
+        if (props.parentCallback === undefined) {
+        } else {
+            props?.parentCallback(string);
+        }
     };
+    const center = {
+        lat: locate.split(',')[0],
+        lng: locate.split(',')[1],
+    };
+    useEffect(() => {
+        const fetchDataApi = async () => {
+            try {
+                const data = await getLocationofAllUser();
+                setData(data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchDataApi();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const Markers = () => {
         useMapEvents({
             click(e) {
-                setPosition([e.latlng.lat, e.latlng.lng]);
+                const latlng = e.latlng;
+                setPosition(latlng);
                 sendData(`${e.latlng.lat}, ${e.latlng.lng}`);
+
+                const data = {
+                    label: 'Some information for the clicked location',
+                    x: latlng.lat,
+                    y: latlng.lng,
+                };
+                setSelectedResult(data);
             },
         });
-
         return position ? (
             <Marker
                 key={position[0]}
                 position={position}
-                interactive={false}
+                interactive={true}
                 icon={iconDefault}
                 onclick={() => setSelectedResult(null)}
             >
-                {selectedResult && (
-                    <Popup position={[selectedResult.y, selectedResult.x]}>{selectedResult.label}</Popup>
-                )}
+                <Popup>
+                    <h3>Vị trí</h3>
+                    <h4>
+                        Location: {selectedResult.x},{selectedResult.y}
+                    </h4>
+                    {selectedResult.label}
+                </Popup>
             </Marker>
         ) : null;
     };
 
     return (
-            <MapContainer center={position || initialPosition} zoom={zoom}>
+        <div className="wrap">
+            <MapContainer
+                center={center}
+                zoom={zoom}
+                fullscreenControl={true}
+                scrollWheelZoom={false}
+                zoomControl={true}
+            >
                 <Markers />
-
+                <UserMarkers userList={data.users} />
+                <FireStationMarkers fireStationList={data.fireStation} />
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 />
+                <Location />
                 <SearchControl
                     provider={provider}
                     showMarker={true}
                     showPopup={false}
                     style={iconDefault}
                     popupFormat={({ result }) => result.label}
-                    maxMarkers={3}
+                    maxMarkers={1}
                     retainZoomLevel={false}
                     animateZoom={true}
                     autoClose={false}
                     searchLabel={'nhập địa chỉ ở đây!'}
                     keepResult={false}
                 />
-                <button className="close-button" onClick={onClose}>
-                    <IconSquareX />
-                </button>
+                {onClose ? (
+                    <button className="close-button" onClick={onClose}>
+                        <IconSquareX />
+                    </button>
+                ) : (
+                    ''
+                )}
             </MapContainer>
+        </div>
     );
 }
 

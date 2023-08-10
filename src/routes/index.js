@@ -11,13 +11,14 @@ import Instruct from '~/pages/Instruct';
 import Service from '~/pages/Service';
 import Setting from '~/pages/Setting';
 import Security from '~/pages/Security';
+import Map from '~/pages/Map';
+import Analysis from '~/pages/Analysis';
 // Public routes
 const publicRoutes = [
     { path: config.routes.home, component: Home, layout: HeaderOnly },
     { path: config.routes.login, component: Login, layout: HeaderOnly },
     { path: config.routes.logout, component: Logout, layout: HeaderOnly },
     { path: config.routes.signup, component: Signup, layout: HeaderOnly },
-
 ];
 
 const privateRoutes = [
@@ -27,6 +28,9 @@ const privateRoutes = [
     { path: config.routes.services, component: Service },
     { path: config.routes.setting, component: Setting },
     { path: config.routes.security, component: Security },
+    { path: config.routes.analysis, component: Analysis },
+    { path: config.routes.usermanager, component: Dashboard },
+    { path: config.routes.map, component: Map },
 ];
 
 export { publicRoutes, privateRoutes };
