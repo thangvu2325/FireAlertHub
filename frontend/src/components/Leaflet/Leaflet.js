@@ -44,7 +44,6 @@ function Leaflet({ locate = '9.785439, 105.624398', onClose, ...props }) {
     const [selectedResult, setSelectedResult] = useState(null);
     const zoom = 17;
     const provider = new OpenStreetMapProvider();
-    const [map, setMap] = useState(null);
     const mapRoutingMachine = useSelector(mapRoutingMachineSelector);
     // const [start, setStart] = useState([38.9072, -77.0369]);
     // const [end, setEnd] = useState([37.7749, -122.4194]);
@@ -113,7 +112,6 @@ function Leaflet({ locate = '9.785439, 105.624398', onClose, ...props }) {
                 fullscreenControl={true}
                 scrollWheelZoom={false}
                 zoomControl={true}
-                whenCreated={(map) => setMap(map)}
             >
                 <Markers />
                 <UserMarkers userList={data.users} />

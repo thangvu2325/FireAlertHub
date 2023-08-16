@@ -4,7 +4,7 @@ import Leaflet from '~/components/Leaflet';
 import Button from '~/components/Button';
 import { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useMediaQuery } from 'react-responsive';
+// import { useMediaQuery } from 'react-responsive';
 import { adminSelector, currentUserSelector } from '~/redux/selectors';
 const cx = classNames.bind(styles);
 
@@ -16,7 +16,7 @@ function MyAccount() {
     const [inputPassword, setInputPassword] = useState('*******');
     const [locate, setLocate] = useState(currentUser._doc.location);
     const admin = useSelector(adminSelector);
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
+    // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     const handOpenMap = () => {
         setMapOpen(!mapOpen);

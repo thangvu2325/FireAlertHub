@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import { loginUser } from '../../redux/apiRequest';
 import { useDispatch } from 'react-redux';
-import Button from '~/components/Button';
 import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
 import { errorMessageSelector } from '~/redux/selectors';
-import { EmailIcon } from '~/components/Icons';
 import { IconAt, IconBrandApple, IconBrandGoogle, IconEye, IconLock } from '@tabler/icons-react';
 const cx = classNames.bind(styles);
 
