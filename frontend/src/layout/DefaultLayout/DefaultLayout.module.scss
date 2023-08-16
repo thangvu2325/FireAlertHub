@@ -1,0 +1,12 @@
+.wrapper {
+    display: flex;
+}
+.wrapper-content {
+    flex: 1;
+    transition: 0.3s ease;
+}
+
+.container {
+    background-color: transparent;
+    overflow-y: overlay;
+}

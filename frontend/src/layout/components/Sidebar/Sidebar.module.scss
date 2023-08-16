@@ -1,0 +1,39 @@
+:not(.isDesktop).wrap {
+    display: none;
+    position: absolute;
+    top: calc(var(--default-layout-header-height) + 4px);
+    left: 8px;
+    z-index: 12;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+
+    .checked {
+        display: block;
+    }
+}
+:not(.isDesktop).checked {
+    display: block;
+}
+.isDesktop {
+    // background-color: rgba($color: #fff, $alpha: 0.4);
+
+    width: var(--width-sidebar);
+    min-width: var(--width-sidebar);
+    height: fit-content;
+    padding-bottom: 48px;
+    z-index: 10;
+    transition: 0.3s ease;
+    border-bottom-right-radius: 4px;
+    overflow: hidden;
+}
+.isDesktop.checked {
+    width: 70px;
+    min-width: 70px;
+}
+.container {
+    text-align: center;
+}
+.svg-inline {
+    overflow: visible;
+}
+// homepage
