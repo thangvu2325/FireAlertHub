@@ -16,7 +16,7 @@ const cx = classNames.bind(styles);
 function ModalNotifyState({ inboxs, showModalMessage, setShowModalMessage }) {
     const dataInboxs = inboxs.filter((inbox) => inbox.check === false);
     const currentUser = useSelector(currentUserSelector);
-    const accessToken = currentUser.accessToken;
+    const accessToken = currentUser?.accessToken;
     const userID = currentUser._doc._id;
     const navigate = useNavigate();
     const dispatch = useDispatch();
