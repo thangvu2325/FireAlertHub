@@ -8,8 +8,9 @@ const cors = require("cors");
 const messagingClient = require("./app/mqtt/mqtt");
 const initial = require("./initial");
 const changeStreams = require("./changeStreams");
+// require("dotenv").config();
+
 changeStreams();
-require("dotenv").config();
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
@@ -21,6 +22,9 @@ db.connect(initial);
 
 const path = require("path");
 app.use(cookieParser());
+require("dotenv").config({
+  path: path.resolve(__dirname, ".env"),
+});
 
 // Kết nối tới MQTT broker
 messagingClient.connectWithPromise();
@@ -33,14 +37,13 @@ messagingClient.registerMessageHandler(WebSocketHandle.broadcastMessagetoUser);
 const port = process.env.PORT || 5000;
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://firealerthub.netlify.app",
     credentials: true,
   })
 );
 const route = require("./routes");
 
 app.use(express.static(path.join(__dirname, "public")));
-
 app.use(express.json());
 app.use(
   express.urlencoded({
