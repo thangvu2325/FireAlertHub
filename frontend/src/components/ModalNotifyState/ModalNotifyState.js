@@ -17,7 +17,7 @@ function ModalNotifyState({ inboxs, showModalMessage, setShowModalMessage }) {
     const dataInboxs = inboxs.filter((inbox) => inbox.check === false);
     const currentUser = useSelector(currentUserSelector);
     const accessToken = currentUser?.accessToken;
-    const userID = currentUser._doc._id;
+    const userID = currentUser?._doc?._id;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const axiosJWT = createAxios(currentUser, dispatch, refreshTokenAction, toast, navigate);
