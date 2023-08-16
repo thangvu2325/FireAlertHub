@@ -1,14 +1,13 @@
 const User = require("../models/User");
 const Role = require("../models/Role");
 const UserManager = require("../models/UserManager");
-const Sensor = require("../models/Sensor");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const messagingClient = require("../mqtt/mqtt");
 const { env } = require("process");
 const NodesList = require("../models/NodesList");
-
+console.log(env.AccessToken_SECRET_KEY);
 let refreshTokens = [];
 
 class AuthController {
@@ -22,6 +21,7 @@ class AuthController {
     User.findOne({ email: req.body.email })
       .populate("roles", "-__v")
       .then((user) => {
+        console.log(user);
         if (!user) {
           return res.status(404).send({ message: "User Not found." });
         }
@@ -37,7 +37,7 @@ class AuthController {
             message: "Invalid Password!",
           });
         }
-
+        console.log(env.AccessToken_SECRET_KEY);
         const accessToken = jwt.sign(
           { id: user.id },
           env.AccessToken_SECRET_KEY,
@@ -72,10 +72,10 @@ class AuthController {
           roles: user.roles ? user.roles : "",
         };
         return res.status(200).json({ _doc, accessToken });
-      })
-      .catch((err) => {
-        res.status(500).send({ message: err });
       });
+    // .catch((err) => {
+    //   res.status(500).send({ message: err });
+    // });
   }
   async signup(req, res) {
     const salt = await bcrypt.genSalt(10);

@@ -72,7 +72,7 @@ function Header({ isTabletOrMobile }) {
     const [showModalMessage, setShowModalMessage] = useState(false);
     const sidebarWidth = useSelector(sidebarWidthSelector);
     const inboxs = useSelector(inboxsSelector);
-    const inboxsData = inboxs.filter((inbox) => inbox.check === false);
+    const inboxsData = inboxs?.filter((inbox) => inbox.check === false);
     const accessToken = user?.accessToken;
     const id = user?._doc?._id;
     const dispatch = useDispatch();

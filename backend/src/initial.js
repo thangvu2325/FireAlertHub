@@ -1,5 +1,4 @@
 const Role = require("./app/models/Role");
-const Sensor = require("./app/models/Sensor");
 async function initial() {
   try {
     const count = await Role.estimatedDocumentCount();
@@ -24,14 +23,6 @@ async function initial() {
       }).save();
       console.log("added 'admin' to roles collection");
     }
-    // await new Sensor({
-    //   name: "smokeValue",
-    // }).save();
-    // console.log("added 'smokeValue' to roles collection");
-    // await new Sensor({
-    //   name: "gasValue",
-    // }).save();
-    // console.log("added 'gasValue' to roles collection");
   } catch (err) {
     console.log("error", err);
   }
