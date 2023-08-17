@@ -70,13 +70,13 @@ async function sendEmailandSMStoUserifhasWarning(nodeWarning, user, station) {
         }
       });
     // Send Email
-    // try {
-    //   await sendEmail(objEmail);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      await sendEmail(objEmail);
+    } catch (err) {
+      console.log(err);
+    }
     // // Send SMS
-    // sendSMS(objSMS);
+    sendSMS(objSMS);
     // Đặt canSend thành false để chặn việc gửi tiếp theo
     canSend = false;
     // Lên lịch gửi tiếp theo sau 5 phút
