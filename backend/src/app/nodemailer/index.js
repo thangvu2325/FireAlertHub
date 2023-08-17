@@ -18,8 +18,8 @@ const sendEmail = async (mailObj) => {
       host: "smtp-relay.sendinblue.com",
       port: 587,
       auth: {
-        user: env.EMAIL_LOGIN,
-        pass: env.EMAIL_PASSWORD,
+        user: "20119287@student.hcmute.edu.vn",
+        pass: "91nwRAFqDt0X8SBO",
       },
     });
     // send mail with defined transport object
