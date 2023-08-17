@@ -5,9 +5,7 @@ const sendSMS = require("../smsTwilio");
 
 function messaging() {
   let client;
-
   // Connect to the message broker
-
   function connectWithPromise() {
     return new Promise((resolve, reject) => {
       try {
@@ -16,11 +14,6 @@ function messaging() {
         console.log("error connecting!");
         reject(err);
       }
-
-      client.on("connect", function () {
-        console.log("Connected to broker!");
-        resolve("Connected!");
-      });
     });
   }
 
@@ -41,10 +34,6 @@ function messaging() {
       }
     });
   }
-  function registerMessageLWTHandler() {
-    client.on("message", (topic, message) => {});
-  }
-
   // Register a function to handle received messages
   function registerMessageHandler(handler) {
     client.on("message", function (topic, message) {
@@ -58,6 +47,7 @@ function messaging() {
                 body: `Thiết bị của bạn đã bị ngắt kết nối`,
                 phone: user.phone,
               };
+              console.log(objectSMS);
               sendSMS(objectSMS);
             }
           });
@@ -130,7 +120,6 @@ function messaging() {
     subscribe: subscribe,
     publish: publish,
     registerMessageHandler: registerMessageHandler,
-    registerMessageLWTHandler: registerMessageLWTHandler,
   };
 }
 

@@ -9,10 +9,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install && npm run start"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/thangvu2325/nodejs_blog.git"
-  },
   "keywords": [
     "nodejs",
     "blog"

@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 const messagingClient = require("../mqtt/mqtt");
 const { env } = require("process");
 const NodesList = require("../models/NodesList");
-// console.log(env.AccessToken_SECRET_KEY);
 let refreshTokens = [];
 
 class AuthController {

@@ -7,10 +7,7 @@ const db = require("./config/db");
 const cors = require("cors");
 const messagingClient = require("./app/mqtt/mqtt");
 const initial = require("./initial");
-const changeStreams = require("./changeStreams");
-// require("dotenv").config();
-
-changeStreams();
+require("dotenv").config();
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
@@ -22,17 +19,12 @@ db.connect(initial);
 
 const path = require("path");
 app.use(cookieParser());
-require("dotenv").config({
-  path: path.resolve(__dirname, ".env"),
-});
-
 // Kết nối tới MQTT broker
 messagingClient.connectWithPromise();
 messagingClient.subscribe(
   "messages/dc9d5717-2522-4f39-a899-cce286152284/attributets"
 );
 messagingClient.subscribe("user/status");
-messagingClient.registerMessageLWTHandler();
 messagingClient.registerMessageHandler(WebSocketHandle.broadcastMessagetoUser);
 const port = process.env.PORT || 5000;
 app.use(
