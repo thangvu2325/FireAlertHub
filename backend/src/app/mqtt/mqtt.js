@@ -5,7 +5,9 @@ const sendSMS = require("../smsTwilio");
 
 function messaging() {
   let client;
+
   // Connect to the message broker
+
   function connectWithPromise() {
     return new Promise((resolve, reject) => {
       try {
@@ -14,6 +16,9 @@ function messaging() {
         console.log("error connecting!");
         reject(err);
       }
+      client.on("connect", function () {
+        resolve("Connected!");
+      });
     });
   }
 
