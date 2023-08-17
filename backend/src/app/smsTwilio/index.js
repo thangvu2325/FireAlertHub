@@ -1,7 +1,8 @@
 const sendSMS = ({ body, phone }) => {
-  const accountSid = "AC26f3e3b786c4723f14a27e17f31d486c";
-  const authToken = "c92f1b78cc0172fe76fa1bd031caf912";
+  const accountSid = process.env.ACCOUNT_SID;
+  const authToken = process.env.AUTH_TOKEN;
   const client = require("twilio")(accountSid, authToken);
+  console.log(phone);
   client.messages
     .create({
       body: body,

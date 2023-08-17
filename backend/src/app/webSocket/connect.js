@@ -87,6 +87,7 @@ async function sendEmailandSMStoUserifhasWarning(nodeWarning, user, station) {
 }
 function handleIfhasWarning(user, nodeList, station) {
   const nodeWarning = nodeList.filter((node) => node.warning);
+  console.log(nodeWarning);
   if (nodeWarning.length) {
     sendEmailandSMStoUserifhasWarning(nodeWarning, user, station);
   }
