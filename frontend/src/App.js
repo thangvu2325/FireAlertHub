@@ -10,7 +10,7 @@ import { fetchNodesData, setNodesValue } from './redux/nodesSlice';
 import { fetchInboxsData } from './redux/inboxsSlice';
 import { useMediaQuery } from 'react-responsive';
 export const StateContext = createContext();
-const WS_URL = 'ws://firealerthub.onrender.com/';
+const WS_URL = 'wss://firealerthub.onrender.com/';
 function App() {
     const currentUser = useSelector(currentUserSelector);
     const dispatch = useDispatch();
