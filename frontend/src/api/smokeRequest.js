@@ -1,6 +1,6 @@
 export const pushSmokeValue = async (id, data, accessToken, axiosJWT) => {
     try {
-        await axiosJWT.patch('http://localhost:5000/api/addSmoke', data, {
+        await axiosJWT.patch('https://firealerthub.onrender.com/api/addSmoke', data, {
             params: { id },
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,
@@ -13,7 +13,7 @@ export const pushSmokeValue = async (id, data, accessToken, axiosJWT) => {
 };
 export const getSmokeValue = (id, accessToken, axiosJWT) => {
     return axiosJWT
-        .get('http://localhost:5000/api/getsmoke', {
+        .get('https://firealerthub.onrender.com/api/getsmoke', {
             params: { id },
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,

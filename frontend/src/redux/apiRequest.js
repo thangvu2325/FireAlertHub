@@ -14,7 +14,7 @@ import {
 export const loginUser = async (user, dispatch, navigate, toast) => {
     dispatch(loginStart());
     try {
-        const res = await axios.post('http://localhost:5000/auth/login', user, {
+        const res = await axios.post('https://firealerthub.onrender.com/auth/login', user, {
             withCredentials: true,
         });
         dispatch(loginSuccess(res.data));
@@ -29,7 +29,7 @@ export const loginUser = async (user, dispatch, navigate, toast) => {
 export const registerUser = async (user, dispatch, navigate, toast) => {
     dispatch(registerStart());
     try {
-        await axios.post('http://localhost:5000/auth/register', user);
+        await axios.post('https://firealerthub.onrender.com/auth/register', user);
         dispatch(registerSuccess());
         toast.success('Đăng ký thành công!');
         navigate('/login');
@@ -44,7 +44,7 @@ export const registerUser = async (user, dispatch, navigate, toast) => {
 export const logOut = async (dispatch, id, router, accessToken, axiosJWT) => {
     dispatch(logOutStart());
     try {
-        await axiosJWT.post('http://localhost:5000/auth/logout', id, {
+        await axiosJWT.post('https://firealerthub.onrender.com/auth/logout', id, {
             withCredentials: true,
             headers: { token: `Bearer ${accessToken}` },
         });

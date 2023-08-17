@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const getalluserinUserManager = (id, accessToken, axiosJWT) => {
     return axiosJWT
-        .get('http://localhost:5000/api/getalluserinUserManager', {
+        .get('https://firealerthub.onrender.com/api/getalluserinUserManager', {
             params: { id },
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,
@@ -18,7 +18,7 @@ export const getalluserinUserManager = (id, accessToken, axiosJWT) => {
 export const sendConnectToDevice = async (id, accessToken, axiosJWT) => {
     try {
         await axiosJWT.post(
-            'http://localhost:5000/api/send-mqtt',
+            'https://firealerthub.onrender.com/api/send-mqtt',
             {},
             {
                 params: { id },
@@ -34,7 +34,7 @@ export const sendConnectToDevice = async (id, accessToken, axiosJWT) => {
 };
 export const getAllUserWarninginUserManager = (id, accessToken, axiosJWT) => {
     return axiosJWT
-        .get('http://localhost:5000/api/getAllUserWarninginUserManager', {
+        .get('https://firealerthub.onrender.com/api/getAllUserWarninginUserManager', {
             params: { id },
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,
@@ -49,7 +49,7 @@ export const getAllUserWarninginUserManager = (id, accessToken, axiosJWT) => {
 };
 export const getLocationofAllUser = () => {
     return axios
-        .get('http://localhost:5000/api/getLocationofAllUser', {
+        .get('https://firealerthub.onrender.com/api/getLocationofAllUser', {
             withCredentials: true,
         })
         .then((response) => {
@@ -64,7 +64,7 @@ export const getLocationofAllUser = () => {
 //inboxs
 export const getInbox = (id, accessToken, axiosJWT) => {
     return axiosJWT
-        .get(`http://localhost:5000/api/${id}/getInbox`, {
+        .get(`https://firealerthub.onrender.com/api/${id}/getInbox`, {
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,
         })
@@ -78,7 +78,7 @@ export const getInbox = (id, accessToken, axiosJWT) => {
 };
 export const handleCheckInbox = (id, inboxId, accessToken, axiosJWT) => {
     return axiosJWT
-        .patch(`http://localhost:5000/api/${id}/${inboxId}/handleCheckInbox`, {
+        .patch(`https://firealerthub.onrender.com/api/${id}/${inboxId}/handleCheckInbox`, {
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,
         })
@@ -92,7 +92,7 @@ export const handleCheckInbox = (id, inboxId, accessToken, axiosJWT) => {
 };
 export const handleDeleteInbox = (id, inboxId, accessToken, axiosJWT) => {
     return axiosJWT
-        .delete(`http://localhost:5000/api/${id}/${inboxId}/handleDeleteInbox`, {
+        .delete(`https://firealerthub.onrender.com/api/${id}/${inboxId}/handleDeleteInbox`, {
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,
         })

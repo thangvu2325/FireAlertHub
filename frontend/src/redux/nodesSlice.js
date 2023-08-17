@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 export const fetchNodesData = createAsyncThunk('nodes/fetchData', async (id, accessToken) => {
     try {
-        const res = await axios.get('http://localhost:5000/api/getNodesOfUser', {
+        const res = await axios.get('https://firealerthub.onrender.com/api/getNodesOfUser', {
             params: { id },
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,

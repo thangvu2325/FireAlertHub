@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 export const fetchInboxsData = createAsyncThunk('inboxs/fetchData', async (id, accessToken) => {
     try {
-        const res = await axios.get(`http://localhost:5000/api/${id}/getInbox`, {
+        const res = await axios.get(`https://firealerthub.onrender.com/api/${id}/getInbox`, {
             headers: { token: `Bearer ${accessToken}` },
             withCredentials: true,
         });
