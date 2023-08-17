@@ -10,7 +10,7 @@ import { fetchNodesData, setNodesValue } from './redux/nodesSlice';
 import { fetchInboxsData } from './redux/inboxsSlice';
 import { useMediaQuery } from 'react-responsive';
 export const StateContext = createContext();
-const WS_URL = 'ws://localhost:5000/';
+const WS_URL = 'ws://firealerthub.netlify.app/';
 function App() {
     const currentUser = useSelector(currentUserSelector);
     const dispatch = useDispatch();
