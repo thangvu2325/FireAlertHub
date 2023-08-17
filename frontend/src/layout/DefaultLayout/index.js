@@ -1,5 +1,6 @@
 import Header from '~/layout/components/Header';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import styles from './DefaultLayout.module.scss';
 import classNames from 'classnames/bind';
 import { useContext, useState } from 'react';
@@ -22,6 +23,8 @@ const cx = classNames.bind(styles);
 function DefaultLayout({ children }) {
     const [checked, setChecked] = useState(false);
     const [callAPI, setCallAPI] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
     const { requestCallAPI, setRequestCallAPI } = useContext(StateContext);
 
     const callbackFunction = (childData) => {
@@ -70,17 +73,40 @@ function DefaultLayout({ children }) {
         setRequestCallAPI(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [requestCallAPI]);
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 100) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrap')}>
             <ModalBox />
-            <Sidebar isTabletOrMobile={isTabletOrMobile} checked={checked} />
-            <div className={cx('wrapper-content')}>
-                <Header isTabletOrMobile={isTabletOrMobile} parentCallback={callbackFunction} />
-                <div className={cx('container')}>
-                    <div className={cx('content')}>{children}</div>
+            <div className={cx('wrap-container')}>
+                <Sidebar isScrolled={isScrolled} isTabletOrMobile={isTabletOrMobile} checked={checked} />
+                <div className={cx('wrap-content')}>
+                    <Header
+                        isTabletOrMobile={isTabletOrMobile}
+                        parentCallback={callbackFunction}
+                        isScrolled={isScrolled}
+                    />
+                    <div className={cx('container-content')}>
+                        <div className={cx('content')}>{children}</div>
+                    </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

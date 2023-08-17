@@ -37,7 +37,7 @@ messagingClient.registerMessageHandler(WebSocketHandle.broadcastMessagetoUser);
 const port = process.env.PORT || 5000;
 app.use(
   cors({
-    origin: "https://firealerthub.netlify.app",
+    origin: ["https://firealerthub.netlify.app", "http://localhost:3000"],
     credentials: true,
   })
 );

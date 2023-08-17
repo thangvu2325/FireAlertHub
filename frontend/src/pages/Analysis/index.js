@@ -132,9 +132,9 @@ function Analysis() {
                             </Tab>
                         </Tabs>
                     </div>
-                    <div className={cx('left-lineChart')}>
-                        <LineChart dataValue={data} activeKey={activeKey} />
-                    </div>
+                </div>
+                <div className={cx('lineChart')}>
+                    <LineChart dataValue={data} activeKey={activeKey} />
                 </div>
                 <div className={cx('container-content')}></div>
             </div>

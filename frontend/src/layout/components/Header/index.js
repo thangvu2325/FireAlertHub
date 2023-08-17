@@ -67,7 +67,7 @@ const MENU_ITEM = [
     },
 ];
 export var barClickChecked = false;
-function Header({ isTabletOrMobile }) {
+function Header({ isTabletOrMobile, isScrolled }) {
     const user = useSelector(currentUserSelector);
     const [showModalMessage, setShowModalMessage] = useState(false);
     const sidebarWidth = useSelector(sidebarWidthSelector);
@@ -110,6 +110,7 @@ function Header({ isTabletOrMobile }) {
         <header
             className={cx('wrapper', {
                 isDesktop: !isTabletOrMobile,
+                isScrolled,
             })}
         >
             <ModalNotifyState

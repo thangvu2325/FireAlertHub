@@ -6,12 +6,12 @@ import SidebarItem from '~/components/SidebarItem';
 import { BookIcon, DashboardIcon, ServiceIcon, SettingIcon } from '~/components/Icons';
 import { IconAnalyze, IconAssembly, IconBriefcase, IconHome2, IconMap, IconUser } from '@tabler/icons-react';
 import { useSelector } from 'react-redux';
-import { adminSelector, sidebarWidthSelector } from '~/redux/selectors';
+import { adminSelector } from '~/redux/selectors';
 const cx = classNames.bind(styles);
-function Sidebar({ isTabletOrMobile }) {
+function Sidebar({ isTabletOrMobile, isScrolled }) {
     // const { admin } = useContext(StateContext);
     const admin = useSelector(adminSelector);
-    const checked = useSelector(sidebarWidthSelector);
+
     const MENU_ITEM = [
         {
             icon: <IconHome2 className={cx('svg-inline')} />,
@@ -97,11 +97,14 @@ function Sidebar({ isTabletOrMobile }) {
     return (
         <aside
             className={cx('wrap', {
-                checked,
                 isDesktop: !isTabletOrMobile,
             })}
         >
-            <div className={cx('container')}>
+            <div
+                className={cx('container', {
+                    isScrolled,
+                })}
+            >
                 {isTabletOrMobile ? '' : <SidebarHeader />}
                 <SidebarItem isTabletOrMobile items={admin !== 'user' ? MENU_Admin : MENU_ITEM} />
             </div>

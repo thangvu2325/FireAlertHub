@@ -1,6 +1,6 @@
 import styles from './DashboardTable.module.scss';
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { createContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -87,28 +87,45 @@ function DashboardTable({ data = [], primary = false, tram = '' }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.length
-                                ? data.map((gateway) => (
-                                      <tr className={cx('first')} key={gateway.gateway}>
-                                          <td
-                                              rowSpan={3}
-                                              onClick={() => handleOpenModalForm(gateway.gateway, gateway.location)}
-                                          >
-                                              {gateway.gateway}
-                                          </td>
-                                          <td colSpan={4}>
-                                              {gateway.nodes.map((node, index) => (
-                                                  <tr key={node.node_name}>
-                                                      <td>{node.node_name}</td>
-                                                      <td>{node.Smoke_value[node.Smoke_value.length - 1].y}</td>
-                                                      <td>{node.Gas_value[node.Gas_value.length - 1].y}</td>
-                                                      <td>{node.Fire_value[node.Fire_value.length - 1].y}</td>
-                                                  </tr>
-                                              ))}
-                                          </td>
-                                      </tr>
-                                  ))
-                                : ''}
+                            {data.length ? (
+                                data.map((gateway) => (
+                                    <Fragment key={gateway.gateway}>
+                                        <tr key={gateway.gateway}>
+                                            <td
+                                                rowSpan={3}
+                                                onClick={() => handleOpenModalForm(gateway.gateway, gateway.location)}
+                                                className={cx('first')}
+                                            >
+                                                {gateway.gateway}
+                                            </td>
+                                            <td>{gateway.nodes[0].node_name}</td>
+                                            <td>
+                                                {
+                                                    gateway.nodes[0].Smoke_value[
+                                                        gateway.nodes[0].Smoke_value.length - 1
+                                                    ].y
+                                                }
+                                            </td>
+                                            <td>
+                                                {gateway.nodes[0].Gas_value[gateway.nodes[0].Gas_value.length - 1].y}
+                                            </td>
+                                            <td>
+                                                {gateway.nodes[0].Fire_value[gateway.nodes[0].Fire_value.length - 1].y}
+                                            </td>
+                                        </tr>
+                                        {gateway.nodes.slice(1).map((node, index) => (
+                                            <tr key={node.node_name}>
+                                                <td>{node.node_name}</td>
+                                                <td>{node.Smoke_value[node.Smoke_value.length - 1].y}</td>
+                                                <td>{node.Gas_value[node.Gas_value.length - 1].y}</td>
+                                                <td>{node.Fire_value[node.Fire_value.length - 1].y}</td>
+                                            </tr>
+                                        ))}
+                                    </Fragment>
+                                ))
+                            ) : (
+                                <tr></tr>
+                            )}
                         </tbody>
                     </Table>
                 </div>

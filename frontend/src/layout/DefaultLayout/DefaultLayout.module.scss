@@ -1,12 +1,9 @@
-.wrapper {
-    display: flex;
-}
-.wrapper-content {
-    flex: 1;
+.wrap-content {
     transition: 0.3s ease;
+    margin-left: var(--width-sidebar);
 }
 
-.container {
+.container-content {
     background-color: transparent;
     overflow-y: overlay;
 }

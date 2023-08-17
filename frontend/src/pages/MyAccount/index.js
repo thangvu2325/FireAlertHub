@@ -31,11 +31,7 @@ function MyAccount() {
                 <h1 className={cx('title')}>USER PROFILE</h1>
             </div>
             {admin !== 'user' ? null : (
-                <div
-                    className={cx('container', {
-                        isDesktop: true,
-                    })}
-                >
+                <div className={cx('container')}>
                     <div className={cx('content')}>
                         <div className={cx('action')}>
                             <h4 className={cx('title')}>Email:</h4>

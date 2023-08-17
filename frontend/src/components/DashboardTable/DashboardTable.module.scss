@@ -7,30 +7,20 @@
 
     table {
         color: var(--text-color);
-        tbody {
-            display: block;
-            max-height: 400px;
-            overflow: overlay;
-        }
+        background-color: rgba($color: #fff, $alpha: 0.2);
         thead {
             color: var(--text-color);
             background-color: #3c91e6;
-            vertical-align: center;
+            // vertical-align: center;
             text-align: center;
         }
         .first {
             vertical-align: middle;
-            td {
-                vertical-align: center;
-                text-align: center;
-                font-weight: 600;
-            }
-            tr {
-                border-bottom: 1px solid #ccc;
-            }
-            :last-child {
-                border-bottom: none;
-            }
+            text-align: center;
+            font-weight: 600;
+        }
+        td {
+            text-align: center;
         }
     }
 }
@@ -41,12 +31,6 @@
     top: -50px;
     height: 100vh;
 }
-tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed; /* even columns width , fix width of table too*/
-}
-
 .header {
     text-align: center;
     margin-bottom: 40px;

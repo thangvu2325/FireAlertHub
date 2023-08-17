@@ -4,10 +4,11 @@ import { privateRoutes, publicRoutes } from '~/routes';
 import { DefaultLayout } from '~/layout';
 import { useDispatch, useSelector } from 'react-redux';
 // import MessengerCustomerChat from 'react-messenger-customer-chat';
-import { currentUserSelector, themeModeSelector } from './redux/selectors';
+import { currentUserSelector, sidebarWidthSelector, themeModeSelector } from './redux/selectors';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { fetchNodesData, setNodesValue } from './redux/nodesSlice';
 import { fetchInboxsData } from './redux/inboxsSlice';
+import { useMediaQuery } from 'react-responsive';
 export const StateContext = createContext();
 const WS_URL = 'ws://localhost:5000/';
 function App() {
@@ -15,6 +16,7 @@ function App() {
     const dispatch = useDispatch();
     const userId = currentUser?._doc._id;
     const accessToken = currentUser?.accessToken;
+    const checked = useSelector(sidebarWidthSelector);
     const [requestCallAPI, setRequestCallAPI] = useState(false);
     const { sendJsonMessage, readyState } = useWebSocket(WS_URL, {
         onOpen: () => {
@@ -34,6 +36,7 @@ function App() {
         retryOnError: true,
         shouldReconnect: () => true,
     });
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
     useEffect(() => {
         if (currentUser?.accessToken) {
             dispatch(fetchNodesData(userId, accessToken));
@@ -57,6 +60,13 @@ function App() {
         document.documentElement.style.setProperty('--background-color', '#3c2299');
         document.documentElement.style.setProperty('--text-color-menu', 'black');
         // document.documentElement.style.setProperty('--white', '#f9f9f9');
+    }
+    if (checked && !isTabletOrMobile) {
+        document.documentElement.style.setProperty('--width-sidebar', '260px');
+    } else if (isTabletOrMobile) {
+        document.documentElement.style.setProperty('--width-sidebar', '0');
+    } else {
+        document.documentElement.style.setProperty('--width-sidebar', '70px');
     }
     return (
         <StateContext.Provider value={{ requestCallAPI, setRequestCallAPI }}>

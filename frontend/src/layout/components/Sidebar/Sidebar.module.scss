@@ -16,7 +16,6 @@
 }
 .isDesktop {
     // background-color: rgba($color: #fff, $alpha: 0.4);
-
     width: var(--width-sidebar);
     min-width: var(--width-sidebar);
     height: fit-content;
@@ -25,6 +24,12 @@
     transition: 0.3s ease;
     border-bottom-right-radius: 4px;
     overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.isScrolled {
+    background-color: rgba($color: #000, $alpha: 0.2);
 }
 .isDesktop.checked {
     width: 70px;
